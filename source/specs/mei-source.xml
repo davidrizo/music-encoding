@@ -210,6 +210,27 @@
         <rng:empty/>
       </content>
     </macroSpec>
+    <macroSpec ident="macro.struc-unstrucContent" module="MEI.shared" type="pe">
+      <desc>Provides a choice between structured and unstructured/mixed content.</desc>
+      <content>
+        <rng:choice>
+          <rng:group>
+            <rng:zeroOrMore>
+              <rng:ref name="model.headLike"/>
+            </rng:zeroOrMore>
+            <rng:zeroOrMore>
+              <rng:ref name="model.pLike"/>
+            </rng:zeroOrMore>
+          </rng:group>
+          <rng:zeroOrMore>
+            <rng:choice>
+              <rng:text/>
+              <rng:ref name="model.textPhraseLike.limited"/>
+            </rng:choice>
+          </rng:zeroOrMore>
+        </rng:choice>
+      </content>
+    </macroSpec>
     <macroSpec ident="macro.titlePart" module="MEI.shared" type="pe">
       <desc>Groups elements that may appear as part of a bibliographic title.</desc>
       <content>
@@ -586,9 +607,15 @@
       <desc>Location of a beam relative to the events it affects.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="above"/>
-          <valItem ident="below"/>
-          <valItem ident="mixed"/>
+          <valItem ident="above">
+            <desc>The beam is above the material it affects.</desc>
+          </valItem>
+          <valItem ident="below">
+            <desc>The beam is below the material it affects.</desc>
+          </valItem>
+          <valItem ident="mixed">
+            <desc>The below is above and below the material it affects.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -683,8 +710,12 @@
       <desc>Boolean attribute values.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="true"/>
-          <valItem ident="false"/>
+          <valItem ident="true">
+            <desc>True.</desc>
+          </valItem>
+          <valItem ident="false">
+            <desc>False.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -694,10 +725,18 @@
         wish to assert an opinion.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="high"/>
-          <valItem ident="medium"/>
-          <valItem ident="low"/>
-          <valItem ident="unknown"/>
+          <valItem ident="high">
+            <desc>High certainty.</desc>
+          </valItem>
+          <valItem ident="medium">
+            <desc>Medium certainty.</desc>
+          </valItem>
+          <valItem ident="low">
+            <desc>Low certainty.</desc>
+          </valItem>
+          <valItem ident="unknown">
+            <desc>An unknown level of certainty.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -1342,14 +1381,30 @@
       <desc>Logical, that is, written, duration attribute values for the mensural repertoire.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="maxima"/>
-          <valItem ident="longa"/>
-          <valItem ident="brevis"/>
-          <valItem ident="semibrevis"/>
-          <valItem ident="minima"/>
-          <valItem ident="semiminima"/>
-          <valItem ident="fusa"/>
-          <valItem ident="semifusa"/>
+          <valItem ident="maxima">
+            <desc>Two or three times as long as a longa.</desc>
+          </valItem>
+          <valItem ident="longa">
+            <desc>Two or three times as long as a brevis.</desc>
+          </valItem>
+          <valItem ident="brevis">
+            <desc>Two times as long as a semibreve.</desc>
+          </valItem>
+          <valItem ident="semibrevis">
+            <desc>Half or one-third as long as a breve/brevis.</desc>
+          </valItem>
+          <valItem ident="minima">
+            <desc>Half or one-third as long as a semibreve/semibrevis.</desc>
+          </valItem>
+          <valItem ident="semiminima">
+            <desc>Half or one-third as long as a minima.</desc>
+          </valItem>
+          <valItem ident="fusa">
+            <desc>Half or one-third as long as a semiminima.</desc>
+          </valItem>
+          <valItem ident="semifusa">
+            <desc>Half or one-third as long as a fusa.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -1411,17 +1466,13 @@
       </content>
     </macroSpec>
     <macroSpec ident="data.FONTFAMILY" module="MEI" type="dt">
-      <desc>Font family (for text) attribute
-        values.<!-- Mup-acceptable values: avantgarde, bookman,
-        courier, helvetica, newcentury, palatino, times. --></desc>
+      <desc>Font family (for text) attribute values.</desc>
       <content>
         <rng:data type="token"/>
       </content>
     </macroSpec>
     <macroSpec ident="data.FONTNAME" module="MEI" type="dt">
-      <desc>Font name (for text) attribute
-        values.<!-- Mup-acceptable values: rom, ital, bold,
-        boldital. --></desc>
+      <desc>Font name (for text) attribute values.</desc>
       <content>
         <rng:data type="token"/>
       </content>
@@ -1437,24 +1488,24 @@
       </content>
     </macroSpec>
     <macroSpec ident="data.FONTSIZENUMERIC" module="MEI" type="dt">
-      <desc>Font size expressed as numbers; i.e. points.</desc>
+      <desc>Font size expressed as numbers; i.e. points or virtual units.</desc>
       <content>
         <rng:data type="token">
-          <rng:param name="pattern">\d*(\.\d+)?(pt)?</rng:param>
+          <rng:param name="pattern">\d*(\.\d+)?(pt|vu)</rng:param>
           <rng:except>
             <!-- disallow no-value or all-zero patterns -->
             <rng:choice>
               <rng:data type="token">
-                <rng:param name="pattern">(pt)?</rng:param>
+                <rng:param name="pattern">(pt|vu)</rng:param>
               </rng:data>
               <rng:data type="token">
-                <rng:param name="pattern">0+(pt)?</rng:param>
+                <rng:param name="pattern">0+(pt|vu)</rng:param>
               </rng:data>
               <rng:data type="token">
-                <rng:param name="pattern">0+(\.0+)?(pt)?</rng:param>
+                <rng:param name="pattern">0+(\.0+)?(pt|vu)</rng:param>
               </rng:data>
               <rng:data type="token">
-                <rng:param name="pattern">\.0+(pt)?</rng:param>
+                <rng:param name="pattern">\.0+(pt|vu)</rng:param>
               </rng:data>
             </rng:choice>
           </rng:except>
@@ -1501,10 +1552,6 @@
           <valItem ident="larger">
             <desc>One size larger than the current size.</desc>
           </valItem>
-          <valItem ident="cue">
-            <desc>Smaller than normal because the item is part of a cue. May or may not be
-              functionally equivalent to another value in this list.</desc>
-          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -1528,8 +1575,12 @@
       <desc>Font weight (for text) attribute values.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="bold"/>
-          <valItem ident="normal"/>
+          <valItem ident="bold">
+            <desc>Bold or heavy.</desc>
+          </valItem>
+          <valItem ident="normal">
+            <desc>Not bold.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -1593,7 +1644,7 @@
           </valItem>
           <valItem ident="hasPart">
             <desc>Target is a chapter, section, part, etc.; volume of a multivolume manifestation;
-              volume/issue of serial; intellectual part of a multipart work; illustration for a
+              volume/issue of serial; intellectual part of a multi-part work; illustration for a
               text; sound aspect of a film; soundtrack for a film on separate medium; soundtrack for
               a film embedded in film; monograph in a series; physical component of a particular
               copy; the binding of a book of the current entity.</desc>
@@ -1904,16 +1955,6 @@
         </rng:data>
       </content>
     </macroSpec>
-    <macroSpec ident="data.KEYSIGTOKEN" module="MEI" type="dt">
-      <desc>A token describing the pitch name, inflection, and octave number of an altered pitch in
-        a key signature.</desc>
-      <content>
-        <rng:data type="token">
-          <rng:param name="pattern"
-            >[a-g][0-9](s|f|ss|x|ff|xs|sx|ts|tf|n|nf|ns|su|sd|fu|fd|nu|nd|1qf|3qf|1qs|3qs)</rng:param>
-        </rng:data>
-      </content>
-    </macroSpec>
     <macroSpec ident="data.LAYERSCHEME" module="MEI" type="dt">
       <desc>Indicates how stems should be drawn when more than one layer is present and stem
         directions are not indicated on the notes/chords themselves. '1' indicates that there is
@@ -1933,8 +1974,12 @@
           <valItem ident="2f">
             <desc>Two layers with 'floating' stems.</desc>
           </valItem>
-          <valItem ident="3o"/>
-          <valItem ident="3f"/>
+          <valItem ident="3o">
+            <desc>Three layers with opposing stems.</desc>
+          </valItem>
+          <valItem ident="3f">
+            <desc>Three layers with 'floating' stems.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -2234,8 +2279,6 @@
     </macroSpec>
     <macroSpec ident="data.MIDINAMES" module="MEI" type="dt">
       <desc>General MIDI instrument names.</desc>
-      <!-- list at http://www.midi.org/techspecs/gm1sound.php presumed to be authority -->
-      <!-- MEI uses 0-based program numbers -->
       <content>
         <valList type="closed">
           <valItem ident="Acoustic_Grand_Piano">
@@ -2708,7 +2751,6 @@
           <valItem ident="Gunshot">
             <desc>Program #127.</desc>
           </valItem>
-          <!-- the following percussion sounds are available when channel is set to 10 -->
           <valItem ident="Acoustic_Bass_Drum">
             <altIdent>Acoustic Bass Drum</altIdent>
             <desc>Key #35.</desc>
@@ -2893,6 +2935,13 @@
           </valItem>
         </valList>
       </content>
+      <remarks>
+        <p>Instrument names are taken from the list at <ref
+            target="http://www.midi.org/techspecs/gm1sound.php"
+            >http://www.midi.org/techspecs/gm1sound.php</ref>. </p>
+        <p>MEI uses 0-based program numbers.</p>
+        <p>Percussion sounds are available when the MIDI channel is set to "10".</p>
+      </remarks>
     </macroSpec>
     <macroSpec ident="data.MIDIVALUE" module="MEI" type="dt">
       <desc>MIDI values in the following range.</desc>
@@ -2906,14 +2955,30 @@
       <desc>Modes.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="major"/>
-          <valItem ident="minor"/>
-          <valItem ident="dorian"/>
-          <valItem ident="phrygian"/>
-          <valItem ident="lydian"/>
-          <valItem ident="mixolydian"/>
-          <valItem ident="aeolian"/>
-          <valItem ident="locrian"/>
+          <valItem ident="major">
+            <desc>Major mode.</desc>
+          </valItem>
+          <valItem ident="minor">
+            <desc>Minor mode.</desc>
+          </valItem>
+          <valItem ident="dorian">
+            <desc>Dorian mode.</desc>
+          </valItem>
+          <valItem ident="phrygian">
+            <desc>Phrygian mode.</desc>
+          </valItem>
+          <valItem ident="lydian">
+            <desc>Lydian mode.</desc>
+          </valItem>
+          <valItem ident="mixolydian">
+            <desc>Mixolydian mode.</desc>
+          </valItem>
+          <valItem ident="aeolian">
+            <desc>Aeolian mode.</desc>
+          </valItem>
+          <valItem ident="locrian">
+            <desc>Locrian mode.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -3035,8 +3100,6 @@
     </macroSpec>
     <macroSpec ident="data.NOTATIONTYPE" module="MEI" type="dt">
       <desc>Notation type and subtype</desc>
-      <!--<valItem ident="neume.heighted"><desc>Heighted neumatic notation</desc></valItem>
-          <valItem ident="neume.unheighted"><desc>Unheighted neumatic notation</desc></valItem>-->
       <content>
         <valList type="closed">
           <valItem ident="cmn">
@@ -3054,6 +3117,14 @@
           <valItem ident="neume">
             <desc>Neumatic notation.</desc>
           </valItem>
+          <!--
+            <valItem ident="neume.heighted">
+              <desc>Heighted neumatic notation</desc>
+            </valItem>
+            <valItem ident="neume.unheighted">
+              <desc>Unheighted neumatic notation</desc>
+            </valItem>
+          -->
           <valItem ident="tab">
             <desc>Tablature notation.</desc>
           </valItem>
@@ -3165,8 +3236,12 @@
         relative to the current one; i.e., the staff above or the staff below.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="above"/>
-          <valItem ident="below"/>
+          <valItem ident="above">
+            <desc>The staff immediately above.</desc>
+          </valItem>
+          <valItem ident="below">
+            <desc>The staff immediately below.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -3365,18 +3440,38 @@
       <desc>Items in all repertoires that may be printed near a staff.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="accid"/>
-          <valItem ident="annot"/>
-          <valItem ident="artic"/>
-          <valItem ident="dir"/>
-          <valItem ident="dynam"/>
-          <valItem ident="harm"/>
-          <valItem ident="ornam"/>
+          <valItem ident="accid">
+            <desc>Accidentals.</desc>
+          </valItem>
+          <valItem ident="annot">
+            <desc>Annotations.</desc>
+          </valItem>
+          <valItem ident="artic">
+            <desc>Articulations.</desc>
+          </valItem>
+          <valItem ident="dir">
+            <desc>Directives.</desc>
+          </valItem>
+          <valItem ident="dynam">
+            <desc>Dynamics.</desc>
+          </valItem>
+          <valItem ident="harm">
+            <desc>Harmony indications.</desc>
+          </valItem>
+          <valItem ident="ornam">
+            <desc>Ornaments.</desc>
+          </valItem>
           <!-- phrase more note-attached than staff-attached? -->
           <!--<valItem ident="phrase"/>-->
-          <valItem ident="sp"/>
-          <valItem ident="stageDir"/>
-          <valItem ident="tempo"/>
+          <valItem ident="sp">
+            <desc>Spoken text.</desc>
+          </valItem>
+          <valItem ident="stageDir">
+            <desc>Stage directions.</desc>
+          </valItem>
+          <valItem ident="tempo">
+            <desc>Tempo markings.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -3384,32 +3479,68 @@
       <desc>Items in the CMN repertoire that may be printed near a staff.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="beam"/>
+          <valItem ident="beam">
+            <desc>Beams.</desc>
+          </valItem>
           <!-- beamSpan is subsumed within "beam" -->
           <!--<valItem ident="beamSpan"/>-->
-          <valItem ident="bend"/>
-          <valItem ident="breath"/>
-          <valItem ident="cpMark"/>
-          <valItem ident="fermata"/>
-          <valItem ident="fing"/>
+          <valItem ident="bend">
+            <desc>Bend indications.</desc>
+          </valItem>
+          <valItem ident="breath">
+            <desc>Breath marks.</desc>
+          </valItem>
+          <valItem ident="cpMark">
+            <desc>Copy marks.</desc>
+          </valItem>
+          <valItem ident="fermata">
+            <desc>Fermatas.</desc>
+          </valItem>
+          <valItem ident="fing">
+            <desc>Fingerings.</desc>
+          </valItem>
           <!-- fingGrp is subsumed within "fing" -->
           <!--<valItem ident="fingGrp"/>-->
-          <valItem ident="hairpin"/>
-          <valItem ident="harpPedal"/>
-          <valItem ident="ligatureSpan"/>
-          <valItem ident="lv"/>
-          <valItem ident="mordent"/>
-          <valItem ident="octave"/>
-          <valItem ident="pedal"/>
-          <valItem ident="reh"/>
+          <valItem ident="hairpin">
+            <desc>Hairpins.</desc>
+          </valItem>
+          <valItem ident="harpPedal">
+            <desc>Harp pedals.</desc>
+          </valItem>
+          <valItem ident="ligatureSpan">
+            <desc>Ligature indicators.</desc>
+          </valItem>
+          <valItem ident="lv">
+            <desc>Laissez vibrer/open tie marks.</desc>
+          </valItem>
+          <valItem ident="mordent">
+            <desc>Mordents.</desc>
+          </valItem>
+          <valItem ident="octave">
+            <desc>Octaviation marks.</desc>
+          </valItem>
+          <valItem ident="pedal">
+            <desc>Piano pedals.</desc>
+          </valItem>
+          <valItem ident="reh">
+            <desc>Rehearsal marks.</desc>
+          </valItem>
           <!-- slur more note-attached than staff-attached? -->
           <!--<valItem ident="slur"/>-->
-          <valItem ident="tie"/>
-          <valItem ident="trill"/>
-          <valItem ident="tuplet"/>
+          <valItem ident="tie">
+            <desc>Ties.</desc>
+          </valItem>
+          <valItem ident="trill">
+            <desc>Trills.</desc>
+          </valItem>
+          <valItem ident="tuplet">
+            <desc>Tuplets.</desc>
+          </valItem>
           <!-- tupletSpan is subsumed within "tuplet" -->
           <!--<valItem ident="tupletSpan"/>-->
-          <valItem ident="turn"/>
+          <valItem ident="turn">
+            <desc>Turns.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -3417,7 +3548,9 @@
       <desc>Items in the Mensural repertoire that may be printed near a staff.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="ligature"/>
+          <valItem ident="ligature">
+            <desc>Ligatures.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -3461,8 +3594,12 @@
       <desc>Location of symbol relative to a staff.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="above"/>
-          <valItem ident="below"/>
+          <valItem ident="above">
+            <desc>Above the staff.</desc>
+          </valItem>
+          <valItem ident="below">
+            <desc>Below the staff.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -3470,8 +3607,12 @@
       <desc>Location of symbol relative to a staff.</desc>
       <content>
         <valList type="closed">
-          <valItem ident="between"/>
-          <valItem ident="within"/>
+          <valItem ident="between">
+            <desc>Between staves.</desc>
+          </valItem>
+          <valItem ident="within">
+            <desc>Within/on the staff.</desc>
+          </valItem>
         </valList>
       </content>
     </macroSpec>
@@ -3936,6 +4077,21 @@
         </attDef>
       </attList>
     </classSpec>
+    <classSpec ident="att.ambitus.anl" module="MEI.shared" type="atts">
+      <desc>Analytical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.intervalHarmonic"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="att.ambitus.ges" module="MEI.shared" type="atts">
+      <desc>Gestural domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.ambitus.log" module="MEI.shared" type="atts">
+      <desc>Logical domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.ambitus.vis" module="MEI.shared" type="atts">
+      <desc>Visual domain attributes.</desc>
+    </classSpec>
     <classSpec ident="att.ambNote.anl" module="MEI.analytical" type="atts">
       <desc>Analytical domain attributes.</desc>
     </classSpec>
@@ -3962,6 +4118,25 @@
         <memberOf key="att.typography"/>
       </classes>
     </classSpec>
+    <classSpec ident="att.anchoredText.anl" module="MEI.shared" type="atts">
+      <desc>Analytical domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.anchoredText.ges" module="MEI.shared" type="atts">
+      <desc>Gestural domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.anchoredText.log" module="MEI.usersymbols" type="atts">
+      <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.startId"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="att.anchoredText.vis" module="MEI.shared" type="atts">
+      <desc>Visual domain attributes.</desc>
+      <classes>
+        <memberOf key="att.visualOffset"/>
+        <memberOf key="att.xy"/>
+      </classes>
+    </classSpec>
     <classSpec ident="att.annot.anl" module="MEI.analytical" type="atts">
       <desc>Analytical domain attributes.</desc>
     </classSpec>
@@ -3979,6 +4154,7 @@
           att.staffIdent, and att.layerIdent) are provided here directly instead of making annot a 
           member of att.controlEvent. -->
       <classes>
+        <memberOf key="att.alignment"/>
         <memberOf key="att.duration.additive"/>
         <memberOf key="att.layerIdent"/>
         <memberOf key="att.staffIdent"/>
@@ -4787,6 +4963,7 @@
         <memberOf key="att.articulation"/>
         <memberOf key="att.augmentDots"/>
         <memberOf key="att.chord.log.cmn"/>
+        <memberOf key="att.cue"/>
         <memberOf key="att.duration.logical"/>
         <memberOf key="att.event"/>
         <memberOf key="att.sylText"/>
@@ -4838,6 +5015,70 @@
         <memberOf key="att.beamSecondary"/>
       </classes>
     </classSpec>
+    <classSpec ident="att.chordDef.anl" module="MEI.analytical" type="atts">
+      <desc>Analytical domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.chordDef.ges" module="MEI.gestural" type="atts">
+      <desc>Gestural domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.chordDef.log" module="MEI.harmony" type="atts">
+      <desc>Logical domain attributes.</desc>
+      <attList>
+        <attDef ident="pos" usage="opt">
+          <desc>Records the fret position at which the chord tablature is to be played.</desc>
+          <datatype>
+            <rng:data type="positiveInteger"/>
+          </datatype>
+        </attDef>
+      </attList>
+    </classSpec>
+    <classSpec ident="att.chordDef.vis" module="MEI.visual" type="atts">
+      <desc>Visual domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.chordMember.anl" module="MEI.analytical" type="atts">
+      <desc>Analytical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.intervalHarmonic"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="att.chordMember.ges" module="MEI.gestural" type="atts">
+      <desc>Gestural domain attributes.</desc>
+      <classes>
+        <memberOf key="att.accidental.gestural"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="att.chordMember.log" module="MEI.harmony" type="atts">
+      <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.pitched"/>
+      </classes>
+      <attList>
+        <attDef ident="string" usage="opt">
+          <desc>Holds the number of the string to be played.</desc>
+          <datatype>
+            <rng:data type="nonNegativeInteger"/>
+          </datatype>
+        </attDef>
+        <attDef ident="fret" usage="opt">
+          <desc>Records the location at which a string should be stopped against a fret.</desc>
+          <datatype>
+            <rng:ref name="data.FRETNUMBER.limited"/>
+          </datatype>
+        </attDef>
+        <attDef ident="fing" usage="opt">
+          <desc>Indicates which finger, if any, should be used to play an individual string. The
+            index, middle, ring, and little fingers are represented by the values 1-4, while 't' is
+            for the thumb. The values 'x' and 'o' indicate muffled and open strings,
+            respectively.</desc>
+          <datatype>
+            <rng:ref name="data.FINGER.FRET"/>
+          </datatype>
+        </attDef>
+      </attList>
+    </classSpec>
+    <classSpec ident="att.chordMember.vis" module="MEI.visual" type="atts">
+      <desc>Visual domain attributes.</desc>
+    </classSpec>
     <classSpec ident="att.classed" module="MEI.shared" type="atts">
       <desc>Attributes which can be used to classify features.</desc>
       <attList>
@@ -4849,19 +5090,14 @@
           </datatype>
           <constraintSpec ident="check_classURI" scheme="isoschematron">
             <constraint>
-              <sch:rule context="@class[not(../@xml:base)]">
+              <sch:rule context="@class">
                 <sch:assert
                   test="every $i in tokenize(., '\s+') satisfies substring($i,2)=//mei:category/@xml:id or matches($i, '^([a-z]+://|\.{1,2}/)')"
-                  >When there's no @xml:base attribute, the value in @class must correspond to the
-                  @xml:id attribute of a category element or be an absolute external
-                  URL.</sch:assert>
+                  >The value in @class must either correspond to the @xml:id attribute of a category
+                  element or be an absolute external URL.</sch:assert>
               </sch:rule>
             </constraint>
           </constraintSpec>
-          <remarks>
-            <p>In the absence of <att>xml:base</att>, a fragment identifier in <att>class</att> must
-              point to a classification category recorded in the MEI header.</p>
-          </remarks>
         </attDef>
       </attList>
     </classSpec>
@@ -5125,6 +5361,40 @@
         </attDef>
       </attList>
     </classSpec>
+    <classSpec ident="att.cue" module="MEI.shared" type="atts">
+      <desc>Attributes that describe "cue-ness".</desc>
+      <attList>
+        <attDef ident="cue" usage="opt">
+          <datatype>
+            <rng:ref name="data.BOOLEAN"/>
+          </datatype>
+        </attDef>
+      </attList>
+    </classSpec>
+    <classSpec ident="att.curve.anl" module="MEI.analytical" type="atts">
+      <desc>Analytical domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.curve.ges" module="MEI.gestural" type="atts">
+      <desc>Gestural domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.curve.log" module="MEI.usersymbols" type="atts">
+      <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.startEndId"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="att.curve.vis" module="MEI.visual" type="atts">
+      <desc>Visual domain attributes.</desc>
+      <classes>
+        <memberOf key="att.color"/>
+        <memberOf key="att.curvature"/>
+        <memberOf key="att.curveRend"/>
+        <memberOf key="att.visualOffset"/>
+        <memberOf key="att.visualOffset2"/>
+        <memberOf key="att.xy"/>
+        <memberOf key="att.xy2"/>
+      </classes>
+    </classSpec>
     <classSpec ident="att.curvature" module="MEI.shared" type="atts">
       <desc>Attributes that describe curvature.</desc>
       <attList>
@@ -5304,6 +5574,21 @@
         </attDef>
       </attList>
     </classSpec>
+    <classSpec ident="att.mdiv.anl" module="MEI.analytical" type="atts">
+      <desc>Analytical domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.mdiv.ges" module="MEI.gestural" type="atts">
+      <desc>Gestural domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.mdiv.log" module="MEI.shared" type="atts">
+      <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.alignment"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="att.mdiv.vis" module="MEI.visual" type="atts">
+      <desc>Visual domain attributes.</desc>
+    </classSpec>
     <classSpec ident="att.metadataPointing" module="MEI.shared" type="atts">
       <desc>Provides attributes for elements which may be associated with particular contextual
         elements within the header.</desc>
@@ -5336,9 +5621,6 @@
     </classSpec>
     <classSpec ident="att.mNum.anl" module="MEI.cmn" type="atts">
       <desc>Analytical domain attributes.</desc>
-      <classes>
-        <memberOf key="att.common.anl"/>
-      </classes>
     </classSpec>
     <classSpec ident="att.mNum.ges" module="MEI.cmn" type="atts">
       <desc>Gestural domain attributes.</desc>
@@ -5602,6 +5884,9 @@
     </classSpec>
     <classSpec ident="att.ending.log" module="MEI.shared" type="atts">
       <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.alignment"/>
+      </classes>
     </classSpec>
     <classSpec ident="att.ending.vis" module="MEI.visual" type="atts">
       <desc>Visual domain attributes.</desc>
@@ -5778,7 +6063,7 @@
         <memberOf key="att.duration.gestural"/>
       </classes>
     </classSpec>
-    <classSpec ident="att.f.log" module="MEI.shared" type="atts">
+    <classSpec ident="att.f.log" module="MEI.harmony" type="atts">
       <desc>Logical domain attributes.</desc>
       <classes>
         <memberOf key="att.controlEvent"/>
@@ -5899,7 +6184,7 @@
       <desc>Attributes that deal with string filing characteristics.</desc>
       <attList>
         <attDef ident="nonfiling" usage="opt">
-          <desc>Holds the number of initial characters (such as those constituing an article or
+          <desc>Holds the number of initial characters (such as those constituting an article or
             preposition) that should not be used for sorting a title or name.</desc>
           <datatype>
             <rng:data type="positiveInteger"/>
@@ -6059,7 +6344,7 @@
       </attList>
     </classSpec>
     <classSpec ident="att.glissPresent" module="MEI.cmn" type="atts">
-      <desc>Attributes that indicate whether an event participantes in a glissando.</desc>
+      <desc>Attributes that indicate whether an event participates in a glissando.</desc>
       <attList>
         <attDef ident="gliss" usage="opt">
           <desc>Indicates that this element participates in a glissando. If visual information about
@@ -6579,6 +6864,22 @@
         </attDef>
       </attList>
     </classSpec>
+    <classSpec ident="att.instrDef.anl" module="MEI.analytical" type="atts">
+      <desc>Analytical domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.instrDef.ges" module="MEI.gestural" type="atts">
+      <desc>Gestural domain attributes.</desc>
+      <classes>
+        <memberOf key="att.channelized"/>
+        <memberOf key="att.midiInstrument"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="att.instrDef.log" module="MEI.midi" type="atts">
+      <desc>Logical domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.instrDef.vis" module="MEI.visual" type="atts">
+      <desc>Visual domain attributes.</desc>
+    </classSpec>
     <classSpec ident="att.instrumentIdent" module="MEI.midi" type="atts">
       <desc>Attributes which identify a MIDI instrument.</desc>
       <attList>
@@ -6730,26 +7031,17 @@
     <classSpec ident="att.keySig.log" module="MEI.shared" type="atts">
       <desc>Logical domain attributes.</desc>
       <attList>
-        <attDef ident="fifths" usage="opt">
-          <desc>Indicates where the key lies in the circle of fifths.</desc>
-          <datatype>
-            <rng:ref name="data.KEYFIFTHS"/>
-          </datatype>
-        </attDef>
         <attDef ident="sig" usage="opt">
           <desc>Written key signature.</desc>
           <datatype maxOccurs="unbounded">
-            <rng:ref name="data.KEYSIGTOKEN"/>
+            <rng:ref name="data.KEYFIFTHS"/>
           </datatype>
         </attDef>
       </attList>
       <remarks>
         <p>Mixed key signatures, e.g. those consisting of a mixture of flats and sharps (Read, p.
           143, ex. 9-39), and key signatures with unorthodox placement of the accidentals (Read, p.
-          141) can be encoded using the <att>key.sig</att> attribute or the <gi scheme="MEI"
-            >keySig</gi> element. Each token in <att>key.sig</att> contains a pitch name,
-          accidental, and octave, 'e5f' for example, that indicate what key accidentals should be
-          rendered and where they should be placed.</p>
+          141) can be encoded using the <gi scheme="MEI">keySig</gi> element.</p>
       </remarks>
     </classSpec>
     <classSpec ident="att.keySig.vis" module="MEI.visual" type="atts">
@@ -6796,26 +7088,17 @@
       <desc>Used by staffDef and scoreDef to provide default values for attributes in the logical
         domain that are related to key signatures.</desc>
       <attList>
-        <attDef ident="key.fifths" usage="opt">
-          <desc>Indicates where the key lies in the circle of fifths.</desc>
-          <datatype>
-            <rng:ref name="data.KEYFIFTHS"/>
-          </datatype>
-        </attDef>
         <attDef ident="key.sig" usage="opt">
           <desc>Written key signature.</desc>
           <datatype maxOccurs="unbounded">
-            <rng:ref name="data.KEYSIGTOKEN"/>
+            <rng:ref name="data.KEYFIFTHS"/>
           </datatype>
         </attDef>
       </attList>
       <remarks>
         <p>Mixed key signatures, e.g. those consisting of a mixture of flats and sharps (Read, p.
           143, ex. 9-39), and key signatures with unorthodox placement of the accidentals (Read, p.
-          141) can be encoded using the <att>key.sig</att> attribute or the <gi scheme="MEI"
-            >keySig</gi> element. Each token in <att>key.sig</att> contains a pitch name,
-          accidental, and octave, 'e5f' for example, that indicate what key accidentals should be
-          rendered and where they should be placed.</p>
+          141) can be encoded using the <gi scheme="MEI">keySig</gi> element.</p>
       </remarks>
     </classSpec>
     <classSpec ident="att.keySigDefault.vis" module="MEI.visual" type="atts">
@@ -6840,7 +7123,8 @@
     <classSpec ident="att.labelled" module="MEI.shared" type="atts">
       <attList>
         <attDef ident="label" usage="opt">
-          <desc>Provides a name or label for an element. Should not be used to capture document
+          <desc>Captures text to be used to generate a label for the element to which it's attached,
+            a "tool tip" or prefatory text, for example. Should not be used to record document
             content.</desc>
           <datatype>
             <rng:data type="string"/>
@@ -6869,12 +7153,14 @@
             <rng:data type="language"/>
           </datatype>
         </attDef>
-        <!--There is no standard list of transliteration schemes.-->
         <attDef ident="translit" usage="opt">
           <desc>Specifies the transliteration technique used.</desc>
           <datatype>
             <rng:data type="NMTOKEN"/>
           </datatype>
+          <remarks>
+            <p>There is no standard list of transliteration schemes.</p>
+          </remarks>
         </attDef>
       </attList>
       <remarks>
@@ -7030,8 +7316,8 @@
         <memberOf key="att.duration.gestural"/>
       </classes>
     </classSpec>
-    <classSpec ident="att.line.log" module="MEI.shared" type="atts">
-      <desc>Attributes for describing the logical behaviour of a line.</desc>
+    <classSpec ident="att.line.log" module="MEI.usersymbols" type="atts">
+      <desc>Attributes for describing the logical behavior of a line.</desc>
       <classes>
         <memberOf key="att.controlEvent"/>
         <memberOf key="att.duration.additive"/>
@@ -7056,10 +7342,11 @@
             <rng:ref name="data.LINEFORM"/>
           </datatype>
         </attDef>
-        <!-- @llength implies we know the direction of the vector which we 
-              can't know without establishing an end point, which in turn makes
-              @llength redundant.
-            -->
+        <!-- @length not necessary: 
+          @length implies we know the direction of the vector which we 
+          can't know without establishing an end point, which in turn makes
+          @length redundant.
+        -->
         <attDef ident="width" usage="opt">
           <desc>Width of the line.</desc>
           <datatype>
@@ -7079,13 +7366,15 @@
             <rng:ref name="data.FONTSIZESCALE"/>
           </datatype>
         </attDef>
-        <!--<attDef ident="segments" usage="opt">
-              <desc>Stores the number of segments used to render a dashed, dotted, or wavy
-                line.</desc>
-              <datatype>
-                <rng:data type="positiveInteger"/>
-              </datatype>
-            </attDef>-->
+        <!-- Possible addition:
+          <attDef ident="segments" usage="opt">
+            <desc>Stores the number of segments used to render a dashed, dotted, or wavy
+              line.</desc>
+            <datatype>
+              <rng:data type="positiveInteger"/>
+            </datatype>
+          </attDef>
+        -->
         <attDef ident="startsym" usage="opt">
           <desc>Symbol rendered at start of line.</desc>
           <datatype>
@@ -7098,12 +7387,14 @@
             <rng:ref name="data.FONTSIZESCALE"/>
           </datatype>
         </attDef>
-        <!--<attDef ident="waveheight" usage="opt">
-              <desc>Captures the wave height of a wavy line.</desc>
-              <datatype>
-                <rng:ref name="data.MEASUREMENT"/>
-              </datatype>
-            </attDef>-->
+        <!-- Possible addition:
+          <attDef ident="waveheight" usage="opt">
+            <desc>Captures the wave height of a wavy line.</desc>
+            <datatype>
+              <rng:ref name="data.MEASUREMENT"/>
+            </datatype>
+          </attDef>
+        -->
       </attList>
     </classSpec>
     <classSpec ident="att.lineLoc" module="MEI.shared" type="atts">
@@ -7138,13 +7429,15 @@
             <rng:ref name="data.FONTSIZESCALE"/>
           </datatype>
         </attDef>
-        <!--<attDef ident="lsegments" usage="opt">
-              <desc>Stores the number of segments used to render a dashed, dotted, or wavy
-                line.</desc>
-              <datatype>
-                <rng:data type="positiveInteger"/>
-              </datatype>
-            </attDef>-->
+        <!-- Possible addition:
+          <attDef ident="lsegments" usage="opt">
+            <desc>Stores the number of segments used to render a dashed, dotted, or wavy
+              line.</desc>
+            <datatype>
+              <rng:data type="positiveInteger"/>
+            </datatype>
+          </attDef>
+        -->
         <attDef ident="lstartsym" usage="opt">
           <desc>Symbol rendered at start of line.</desc>
           <datatype>
@@ -7157,12 +7450,14 @@
             <rng:ref name="data.FONTSIZESCALE"/>
           </datatype>
         </attDef>
-        <!--<attDef ident="lwaveheight" usage="opt">
-              <desc>Captures the wave height of a wavy line.</desc>
-              <datatype>
-                <rng:ref name="data.MEASUREMENT"/>
-              </datatype>
-            </attDef>-->
+        <!-- Possible addition:
+          <attDef ident="lwaveheight" usage="opt">
+            <desc>Captures the wave height of a wavy line.</desc>
+            <datatype>
+              <rng:ref name="data.MEASUREMENT"/>
+            </datatype>
+          </attDef>
+        -->
       </attList>
     </classSpec>
     <classSpec ident="att.lineRend.base" module="MEI.shared" type="atts">
@@ -7174,10 +7469,11 @@
             <rng:ref name="data.LINEFORM"/>
           </datatype>
         </attDef>
-        <!-- @llength implies we know the direction of the vector which we 
-              can't know without establishing an end point, which in turn makes
-              @llength redundant.
-            -->
+        <!-- @llength not necessary:
+          @llength implies we know the direction of the vector which we 
+          can't know without establishing an end point, which in turn makes
+          @llength redundant.
+        -->
         <attDef ident="lwidth" usage="opt">
           <desc>Width of a line.</desc>
           <datatype>
@@ -7429,7 +7725,7 @@
         <memberOf key="att.timestamp.gestural"/>
       </classes>
     </classSpec>
-    <classSpec ident="att.measure.log" module="MEI.shared" type="atts">
+    <classSpec ident="att.measure.log" module="MEI.cmn" type="atts">
       <desc>Logical domain attributes. The n attribute contains a name or number associated with the
         measure (Read, p. 445). Often, this is an integer, but not always. For example, some
         measures, especially incomplete measures or those under an ending mark, may have labels that
@@ -7440,6 +7736,7 @@
         may be used to indicate another measure which metrically completes the current, incomplete
         one.</desc>
       <classes>
+        <memberOf key="att.alignment"/>
         <memberOf key="att.meterConformance.bar"/>
       </classes>
       <attList>
@@ -7636,8 +7933,12 @@
         <attDef ident="form" usage="opt">
           <desc>Indicates whether the base symbol is written vertically or horizontally.</desc>
           <valList type="closed">
-            <valItem ident="horizontal"/>
-            <valItem ident="vertical"/>
+            <valItem ident="horizontal">
+              <desc>Horizontally oriented.</desc>
+            </valItem>
+            <valItem ident="vertical">
+              <desc>Vertically oriented.</desc>
+            </valItem>
           </valList>
         </attDef>
         <attDef ident="orient" usage="opt">
@@ -7739,8 +8040,12 @@
         <attDef ident="mensur.form" usage="opt">
           <desc>Indicates whether the base symbol is written vertically or horizontally.</desc>
           <valList type="closed">
-            <valItem ident="horizontal"/>
-            <valItem ident="vertical"/>
+            <valItem ident="horizontal">
+              <desc>Horizontally oriented.</desc>
+            </valItem>
+            <valItem ident="vertical">
+              <desc>Vertically oriented.</desc>
+            </valItem>
           </valList>
         </attDef>
         <attDef ident="mensur.loc" usage="opt">
@@ -7946,11 +8251,11 @@
               <desc>Meter signatures appear in alternating measures.</desc>
             </valItem>
             <valItem ident="interchanging">
-              <desc>Meter signatures are interchangable, e.g. 3/4 and 6/8.</desc>
+              <desc>Meter signatures are interchangeable, e.g. 3/4 and 6/8.</desc>
             </valItem>
             <valItem ident="mixed">
               <desc>Meter signatures with different unit values are used to express a complex
-                metrical pattern that is not expressable using traditional means, such as
+                metrical pattern that is not expressible using traditional means, such as
                 2/4+1/8.</desc>
             </valItem>
           </valList>
@@ -8201,6 +8506,7 @@
     <classSpec ident="att.mRest.log" module="MEI.cmn" type="atts">
       <desc>Logical domain attributes.</desc>
       <classes>
+        <memberOf key="att.cue"/>
         <memberOf key="att.duration.additive"/>
         <memberOf key="att.event"/>
       </classes>
@@ -8412,9 +8718,11 @@
     <classSpec ident="att.nc.anl" module="MEI.analytical" type="atts">
       <desc>Analytical domain attributes.</desc>
       <classes>
+        <memberOf key="att.accidental"/>
         <memberOf key="att.harmonicFunction"/>
         <memberOf key="att.intervalMelodic"/>
         <memberOf key="att.melodicFunction"/>
+        <memberOf key="att.pitchClass"/>
         <memberOf key="att.solfa"/>
       </classes>
     </classSpec>
@@ -8423,6 +8731,9 @@
     </classSpec>
     <classSpec ident="att.nc.log" module="MEI.neumes" type="atts">
       <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.pitched"/>
+      </classes>
     </classSpec>
     <classSpec ident="att.nc.vis" module="MEI.visual" type="atts">
       <desc>Visual domain attributes.</desc>
@@ -8482,7 +8793,7 @@
             </valItem>
           </valList>
         </attDef>
-        <attDef ident="episima" usage="opt">
+        <attDef ident="episema" usage="opt">
           <desc/>
           <datatype>
             <rng:ref name="data.BOOLEAN"/>
@@ -8796,6 +9107,7 @@
       <classes>
         <memberOf key="att.augmentDots"/>
         <memberOf key="att.coloration"/>
+        <memberOf key="att.cue"/>
         <memberOf key="att.duration.logical"/>
         <memberOf key="att.event"/>
         <memberOf key="att.note.log.cmn"/>
@@ -9328,6 +9640,9 @@
     </classSpec>
     <classSpec ident="att.pb.log" module="MEI.shared" type="atts">
       <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.alignment"/>
+      </classes>
     </classSpec>
     <classSpec ident="att.pb.vis" module="MEI.visual" type="atts">
       <desc>Visual domain attributes.</desc>
@@ -9336,8 +9651,12 @@
           <desc>States the side of a leaf (as in a manuscript) on which the content following the
               <gi scheme="MEI">pb</gi> element occurs.</desc>
           <valList type="closed">
-            <valItem ident="verso"/>
-            <valItem ident="recto"/>
+            <valItem ident="verso">
+              <desc>The back of a manuscript page.</desc>
+            </valItem>
+            <valItem ident="recto">
+              <desc>The front of a manuscript page.</desc>
+            </valItem>
           </valList>
         </attDef>
       </attList>
@@ -9857,6 +10176,7 @@
       <desc>Logical domain attributes.</desc>
       <classes>
         <memberOf key="att.augmentDots"/>
+        <memberOf key="att.cue"/>
         <memberOf key="att.duration.logical"/>
         <memberOf key="att.event"/>
         <memberOf key="att.rest.log.cmn"/>
@@ -9905,6 +10225,9 @@
     </classSpec>
     <classSpec ident="att.sb.log" module="MEI.shared" type="atts">
       <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.alignment"/>
+      </classes>
     </classSpec>
     <classSpec ident="att.sb.vis" module="MEI.visual" type="atts">
       <desc>Visual domain attributes.</desc>
@@ -10089,6 +10412,9 @@
     </classSpec>
     <classSpec ident="att.section.log" module="MEI.shared" type="atts">
       <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.alignment"/>
+      </classes>
     </classSpec>
     <classSpec ident="att.section.vis" module="MEI.visual" type="atts">
       <desc>Visual domain attributes.</desc>
@@ -10229,7 +10555,7 @@
     <classSpec ident="att.sp.ges" module="MEI.gestural" type="atts">
       <desc>Gestural domain attributes.</desc>
     </classSpec>
-    <classSpec ident="att.sp.log" module="MEI.shared" type="atts">
+    <classSpec ident="att.sp.log" module="MEI.drama" type="atts">
       <desc>Logical domain attributes.</desc>
       <classes>
         <memberOf key="att.controlEvent"/>
@@ -10626,7 +10952,7 @@
     <classSpec ident="att.stageDir.ges" module="MEI.gestural" type="atts">
       <desc>Gestural domain attributes.</desc>
     </classSpec>
-    <classSpec ident="att.stageDir.log" module="MEI.shared" type="atts">
+    <classSpec ident="att.stageDir.log" module="MEI.drama" type="atts">
       <desc>Logical domain attributes.</desc>
       <classes>
         <memberOf key="att.controlEvent"/>
@@ -10838,6 +11164,21 @@
         </constraint>
       </constraintSpec> -->
     </classSpec>
+    <classSpec ident="att.syllable.anl" module="MEI.analytical" type="atts">
+      <desc>Analytical domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.syllable.ges" module="MEI.gestural" type="atts">
+      <desc>Gestural domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.syllable.log" module="MEI.neumes" type="atts">
+      <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.alignment"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="att.syllable.vis" module="MEI.visual" type="atts">
+      <desc>Visual domain attributes.</desc>
+    </classSpec>
     <classSpec ident="att.sylText" module="MEI.shared" type="atts">
       <desc>Attributes that hold associated sung text syllables.</desc>
       <attList>
@@ -10848,6 +11189,30 @@
           </datatype>
         </attDef>
       </attList>
+    </classSpec>
+    <classSpec ident="att.symbol.anl" module="MEI.analytical" type="atts">
+      <desc>Analytical domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.symbol.ges" module="MEI.gestural" type="atts">
+      <desc>Gestural domain attributes.</desc>
+    </classSpec>
+    <classSpec ident="att.symbol.log" module="MEI.shared" type="atts">
+      <desc>Logical domain attributes.</desc>
+      <classes>
+        <memberOf key="att.startId"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="att.symbol.vis" module="MEI.visual" type="atts">
+      <desc>Visual domain attributes.</desc>
+      <classes>
+        <memberOf key="att.altSym"/>
+        <memberOf key="att.color"/>
+        <memberOf key="att.extSym"/>
+        <memberOf key="att.scalable"/>
+        <memberOf key="att.typography"/>
+        <memberOf key="att.visualOffset"/>
+        <memberOf key="att.xy"/>
+      </classes>
     </classSpec>
     <classSpec ident="att.systems" module="MEI.shared" type="atts">
       <desc>Attributes that capture system layout information.</desc>
@@ -10962,7 +11327,7 @@
             <valItem ident="precedente">
               <desc>Indicates a change in pulse rate (tempo) and/or pulse grouping (subdivision) in
                 an "equation" of the form [tempo after change] = [tempo before change]. The term
-                "precedente" often appears following the "equation" to distinquish this kind of
+                "precedente" often appears following the "equation" to distinguish this kind of
                 historical usage from the modern metric modulation form.</desc>
             </valItem>
           </valList>
@@ -11645,7 +12010,7 @@
       </attList>
     </classSpec>
     <classSpec ident="att.whitespace" module="MEI.shared" type="atts">
-      <desc>Attributes the address whitespacing processing.</desc>
+      <desc>Attributes that address whitespace processing.</desc>
       <!--<attDef ident="space" ns="http://www.w3.org/XML/1998/namespace" usage="opt">-->
       <attList>
         <attDef ident="xml:space" usage="opt">
@@ -11744,7 +12109,6 @@
     <classSpec ident="model.annotLike" module="MEI.shared" type="model">
       <desc>Groups annotation-like elements.</desc>
       <classes>
-        <memberOf key="model.controlEventLike"/>
         <memberOf key="model.textPhraseLike.limited"/>
       </classes>
     </classSpec>
@@ -11786,19 +12150,21 @@
         <memberOf key="model.measurePart"/>
         <memberOf key="model.staffPart.mensural"/>
         <memberOf key="model.syllablePart"/>
-        <memberOf key="model.rdgPart.critapp"/>
+        <memberOf key="model.rdgPart.music"/>
+        <memberOf key="model.editTransPart.music"/>
       </classes>
     </classSpec>
     <classSpec ident="model.controlEventLike.cmn" module="MEI.cmn" type="model">
       <desc>Groups control events that appear in CMN.</desc>
       <classes>
         <memberOf key="model.measurePart"/>
-        <memberOf key="model.rdgPart.critapp"/>
+        <memberOf key="model.rdgPart.music"/>
+        <memberOf key="model.editTransPart.music"/>
       </classes>
     </classSpec>
     <classSpec ident="model.controlEventLike.harmony" module="MEI.harmony" type="model">
-      <desc>Groups elements that function as control events; that is, those events that modify or
-        otherwise depend on the existence of notated events.</desc>
+      <desc>Groups harmonic elements that function as control events; that is, those events that
+        modify or otherwise depend on the existence of notated events.</desc>
       <classes>
         <memberOf key="model.controlEventLike"/>
       </classes>
@@ -11818,6 +12184,9 @@
     <classSpec ident="model.dimLike" module="MEI.shared" type="model">
       <desc>Groups elements which describe a measurement forming part of the physical dimensions of
         an object.</desc>
+      <classes>
+        <memberOf key="model.textPhraseLike.limited"/>
+      </classes>
     </classSpec>
     <classSpec ident="model.divLike" module="MEI.text" type="model">
       <desc>Groups elements used to represent generic structural divisions of text.</desc>
@@ -11831,7 +12200,7 @@
     </classSpec>
     <classSpec ident="model.editLike" module="MEI.edittrans" type="model">
       <desc>Groups elements for editorial interventions that may be useful both in transcribing and
-        in authoring.</desc>
+        in authoring processes.</desc>
       <classes>
         <memberOf key="model.paracontentPart"/>
         <memberOf key="model.choicePart"/>
@@ -11848,8 +12217,25 @@
         <memberOf key="model.choicePart"/>
       </classes>
     </classSpec>
+    <classSpec ident="model.editTransPart" module="MEI.edittrans" type="model">
+      <desc>Groups elements that may appear as part of editorial and transcription elements.</desc>
+    </classSpec>
+    <classSpec ident="model.editTransPart.music" module="MEI.edittrans" type="model">
+      <desc>Groups elements that may appear as part of editorial and transcription elements in music
+        notation.</desc>
+      <classes>
+        <memberOf key="model.editTransPart"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="model.editTransPart.text" module="MEI.edittrans" type="model">
+      <desc>Groups elements that may appear as part of editorial and transcription elements in
+        prose.</desc>
+      <classes>
+        <memberOf key="model.editTransPart"/>
+      </classes>
+    </classSpec>
     <classSpec ident="model.encodingPart" module="MEI.header" type="model">
-      <desc>Groups elements that may appear as part of information regarding the encoding
+      <desc>Groups elements that may appear as part of the description of the encoding
         process.</desc>
     </classSpec>
     <classSpec ident="model.endingLike" module="MEI.shared" type="model">
@@ -11864,7 +12250,6 @@
       <classes>
         <memberOf key="model.layerPart"/>
         <memberOf key="model.syllablePart"/>
-        <memberOf key="model.rdgPart.critapp"/>
       </classes>
     </classSpec>
     <classSpec ident="model.eventLike.cmn" module="MEI.cmn" type="model">
@@ -11874,10 +12259,9 @@
       </classes>
     </classSpec>
     <classSpec ident="model.eventLike.measureFilling" module="MEI.cmn" type="model">
-      <desc>Groups events that appear in CMN and that completely fill a measure.</desc>
+      <desc>Groups events that completely fill a CMN measure.</desc>
       <classes>
         <memberOf key="model.layerPart.cmn"/>
-        <memberOf key="model.rdgPart.critapp"/>
       </classes>
     </classSpec>
     <classSpec ident="model.eventLike.mensural" module="MEI.mensural" type="model">
@@ -11891,14 +12275,13 @@
       <classes>
         <memberOf key="model.layerPart.neumes"/>
         <memberOf key="model.syllablePart"/>
-        <memberOf key="model.rdgPart.critapp"/>
       </classes>
     </classSpec>
     <classSpec ident="model.eventPart" type="model" module="MEI.header">
-      <desc>Groups elements that may be used to provide structured description of an event.</desc>
+      <desc>Groups elements that may be used to provide a structured description of an event.</desc>
     </classSpec>
     <classSpec ident="model.expressionLike" type="model" module="MEI.frbr">
-      <desc>Collects expressionlike elements.</desc>
+      <desc>Collects FRBR expression-like elements.</desc>
     </classSpec>
     <classSpec ident="model.figbassLike" module="MEI.harmony" type="model">
       <desc>Groups elements that record figured bass.</desc>
@@ -11912,7 +12295,6 @@
         or figure.</desc>
       <classes>
         <memberOf key="model.textPhraseLike.limited"/>
-        <memberOf key="model.textComponentLike"/>
       </classes>
     </classSpec>
     <classSpec ident="model.fingeringLike" module="MEI.fingering" type="model">
@@ -11932,7 +12314,8 @@
       </classes>
     </classSpec>
     <classSpec ident="model.frontPart" module="MEI.header" type="model">
-      <desc>Groups elements that may appear as part of front matter.</desc>
+      <desc>Groups elements that may appear as part of auxiliary material preceding or following the
+        text proper.</desc>
       <classes>
         <memberOf key="model.physDescPart"/>
       </classes>
@@ -11951,16 +12334,17 @@
       <desc>Groups elements that function as drawing primitives.</desc>
     </classSpec>
     <classSpec ident="model.harmLike" module="MEI.harmony" type="model">
-      <desc>Groups elements that record harmony.</desc>
+      <desc>Groups elements that record indications of harmony.</desc>
       <classes>
         <memberOf key="model.controlEventLike.harmony"/>
       </classes>
     </classSpec>
     <classSpec ident="model.headerPart" module="MEI.header" type="model">
-      <desc>Groups elements that may appear as part of the MEI header.</desc>
+      <desc>Groups elements that may appear as part of the MEI metadata header.</desc>
     </classSpec>
     <classSpec ident="model.headLike" module="MEI.shared" type="model">
-      <desc>Groups elements used to provide a heading at the start of a text division.</desc>
+      <desc>Groups elements used to provide a heading at the start of a text division or other
+        markup component.</desc>
     </classSpec>
     <classSpec ident="model.identifierLike" module="MEI.shared" type="model">
       <desc>Groups identifier-like elements.</desc>
@@ -11982,7 +12366,7 @@
       <desc>Groups elements used to declare a MIDI instrument.</desc>
     </classSpec>
     <classSpec ident="model.itemLike" type="model" module="MEI.frbr">
-      <desc>Collects itemLike elements.</desc>
+      <desc>Collects FRBR item-like elements.</desc>
     </classSpec>
     <classSpec ident="model.keyAccidLike" module="MEI.shared" type="model">
       <desc>Groups elements that represent accidentals in a key signature.</desc>
@@ -12004,7 +12388,8 @@
       <desc>Groups elements that function as notational layers within a staff.</desc>
       <classes>
         <memberOf key="model.staffPart"/>
-        <memberOf key="model.rdgPart.critapp"/>
+        <memberOf key="model.rdgPart.music"/>
+        <memberOf key="model.editTransPart.music"/>
       </classes>
     </classSpec>
     <classSpec ident="model.layerPart" module="MEI.shared" type="model">
@@ -12024,7 +12409,7 @@
       </classes>
     </classSpec>
     <classSpec ident="model.layerPart.mensuralAndNeumes" module="MEI.shared" type="model">
-      <desc>Groups notated events that may appear at the layer level in the mensural and neume
+      <desc>Groups notated events at the layer level that are shared by the mensural and neume
         repertoires.</desc>
       <classes>
         <memberOf key="model.layerPart"/>
@@ -12067,13 +12452,13 @@
       </classes>
     </classSpec>
     <classSpec ident="model.manifestationLike" type="model" module="MEI.frbr">
-      <desc>Collects manifestationLike elements.</desc>
+      <desc>Collects FRBR manifestation-like elements.</desc>
     </classSpec>
     <classSpec ident="model.mdivLike" module="MEI.shared" type="model">
       <desc>Groups elements used to represent generic structural divisions of music notation.</desc>
     </classSpec>
     <classSpec ident="model.measureLike" module="MEI.cmn" type="model">
-      <desc>Groups measure-like elements.</desc>
+      <desc>Groups CMN measure-like elements.</desc>
       <classes>
         <memberOf key="model.sectionPart.cmn"/>
       </classes>
@@ -12085,7 +12470,7 @@
       </classes>
     </classSpec>
     <classSpec ident="model.measurePart" module="MEI.cmn" type="model">
-      <desc>Groups elements that may appear as part of a measure.</desc>
+      <desc>Groups elements that may appear within a CMN measure.</desc>
     </classSpec>
     <classSpec ident="model.meterSigLike" module="MEI.shared" type="model">
       <desc>Groups elements that represent a meter signature.</desc>
@@ -12100,7 +12485,6 @@
         <memberOf key="model.layerPart.mensuralAndNeumes"/>
         <memberOf key="model.measurePart"/>
         <memberOf key="model.syllablePart"/>
-        <memberOf key="model.rdgPart.critapp"/>
       </classes>
     </classSpec>
     <classSpec ident="model.milestoneLike.music" module="MEI.shared" type="model">
@@ -12144,9 +12528,7 @@
     <classSpec ident="model.noteModifierLike" module="MEI.shared" type="model">
       <desc>Groups elements that modify note-like features.</desc>
       <classes>
-        <memberOf key="model.layerPart.mensural"/>
-        <memberOf key="model.syllablePart"/>
-        <memberOf key="model.rdgPart.critapp"/>
+        <memberOf key="model.layerPart.mensuralAndNeumes"/>
       </classes>
     </classSpec>
     <classSpec ident="model.numLike" module="MEI.shared" type="model">
@@ -12176,10 +12558,10 @@
       <desc>Groups elements that represent a separate performer part.</desc>
     </classSpec>
     <classSpec ident="model.partsLike" module="MEI.shared" type="model">
-      <desc>Groups elements that group separate performer parts.</desc>
+      <desc>Groups elements that collect separate performer parts.</desc>
     </classSpec>
     <classSpec ident="model.pbLike" module="MEI.shared" type="model">
-      <desc>Groups pagebreak-like elements.</desc>
+      <desc>Groups page break-like elements.</desc>
       <classes>
         <memberOf key="model.milestoneLike.music"/>
         <memberOf key="model.milestoneLike.text"/>
@@ -12210,17 +12592,25 @@
         <memberOf key="model.textComponentLike"/>
       </classes>
     </classSpec>
-    <classSpec ident="model.rdgPart.critapp" module="MEI.critapp" type="model">
-      <desc>Groups elements that may appear as part of a musical variant.</desc>
+    <classSpec ident="model.rdgPart" module="MEI.critapp" type="model">
+      <desc>Groups elements that may appear as part of a textual or musical variant.</desc>
     </classSpec>
-    <classSpec ident="model.rdgPart.text" module="MEI.text" type="model">
+    <classSpec ident="model.rdgPart.music" module="MEI.critapp" type="model">
+      <desc>Groups elements that may appear as part of a musical variant.</desc>
+      <classes>
+        <memberOf key="model.rdgPart"/>
+      </classes>
+    </classSpec>
+    <classSpec ident="model.rdgPart.text" module="MEI.critapp" type="model">
       <desc>Groups elements that may appear as part of a textual variant.</desc>
+      <classes>
+        <memberOf key="model.rdgPart"/>
+      </classes>
     </classSpec>
     <classSpec ident="model.relationLike" type="model" module="MEI.shared">
-      <desc>Collects relationLike elements.</desc>
+      <desc>Collects elements that express a relationship.</desc>
       <classes>
         <memberOf key="model.textPhraseLike.limited"/>
-        <!--<memberOf key="model.locrefLike"/>-->
       </classes>
     </classSpec>
     <classSpec ident="model.rendLike" module="MEI.shared" type="model">
@@ -12236,7 +12626,7 @@
       </classes>
     </classSpec>
     <classSpec ident="model.resourceLike" module="MEI.shared" type="model">
-      <desc>Groups non-text components that represent the same content as the musical text.</desc>
+      <desc>Groups non-text components that represent the content of the musical text.</desc>
     </classSpec>
     <classSpec ident="model.respLike" module="MEI.shared" type="model">
       <desc>Groups elements that are used to indicate intellectual or other significant
@@ -12256,10 +12646,7 @@
     <classSpec ident="model.scoreDefLike" module="MEI.shared" type="model">
       <desc>Groups elements that provide score meta-information.</desc>
       <classes>
-        <memberOf key="model.scorePart"/>
         <memberOf key="model.sectionPart"/>
-        <memberOf key="model.staffPart.mensuralAndNeumes"/>
-        <memberOf key="model.layerPart.mensuralAndNeumes"/>
       </classes>
     </classSpec>
     <classSpec ident="model.scoreLike" module="MEI.shared" type="model">
@@ -12279,7 +12666,7 @@
       </classes>
     </classSpec>
     <classSpec ident="model.scorePart.neumes" module="MEI.neumes" type="model">
-      <desc>Groups elements that may appear as part of a score in the mensural repertoire.</desc>
+      <desc>Groups elements that may appear as part of a score in the neume repertoire.</desc>
     </classSpec>
     <classSpec ident="model.sectionLike" module="MEI.shared" type="model">
       <desc>Groups elements that represent a segment of music notation.</desc>
@@ -12304,7 +12691,8 @@
       </classes>
     </classSpec>
     <classSpec ident="model.sectionPart.mensuralAndNeumes" module="MEI.shared" type="model">
-      <desc>Groups elements that may appear as part of a section in the neume repertoire.</desc>
+      <desc>Groups elements that may appear as part of a section in the mensural and neume
+        repertoires.</desc>
       <classes>
         <memberOf key="model.sectionPart"/>
       </classes>
@@ -12318,19 +12706,14 @@
     <classSpec ident="model.staffDefLike" module="MEI.shared" type="model">
       <desc>Groups elements that permit declaration of staff properties.</desc>
       <classes>
-        <memberOf key="model.scorePart"/>
         <memberOf key="model.sectionPart"/>
-        <memberOf key="model.staffPart.mensuralAndNeumes"/>
-        <memberOf key="model.layerPart.mensuralAndNeumes"/>
       </classes>
     </classSpec>
     <classSpec ident="model.staffDefPart" module="MEI.shared" type="model">
-      <desc>Groups elements that may appear more than once in the declaration of staff
-        features.</desc>
+      <desc>Groups elements that may appear in the declaration of staff features.</desc>
     </classSpec>
     <classSpec ident="model.staffDefPart.mensural" module="MEI.mensural" type="model">
-      <desc>Groups elements that may appear more than once in the declaration of staff
-        features.</desc>
+      <desc>Groups elements that may appear in the declaration of staff features.</desc>
       <classes>
         <memberOf key="model.staffDefPart"/>
       </classes>
@@ -12368,11 +12751,9 @@
       </classes>
     </classSpec>
     <classSpec ident="model.stageDirLike" module="MEI.drama" type="model">
-      <desc>Groups elements containing stage directions or similar things defined by the module for
-        performance texts.</desc>
+      <desc>Groups elements containing stage directions in performance texts.</desc>
       <classes>
         <memberOf key="model.controlEventLike"/>
-        <memberOf key="model.rdgPart.critapp"/>
         <memberOf key="model.paracontentPart"/>
       </classes>
     </classSpec>
@@ -12386,16 +12767,16 @@
       <desc>Groups elements that accommodate neumed text.</desc>
       <classes>
         <memberOf key="model.layerPart.neumes"/>
-        <memberOf key="model.rdgPart.critapp"/>
       </classes>
     </classSpec>
     <classSpec ident="model.syllablePart" module="MEI.neumes" type="model">
-      <desc>Groups elements that may appear as part of content of a syllable.</desc>
+      <desc>Groups elements that may appear as part of the content of a syllable.</desc>
     </classSpec>
     <classSpec ident="model.sylLike" module="MEI.shared" type="model">
       <desc>Groups elements that contain a lyric syllable.</desc>
       <classes>
-        <memberOf key="model.rdgPart.critapp"/>
+        <memberOf key="model.editTransPart"/>
+        <memberOf key="model.rdgPart"/>
         <memberOf key="model.syllablePart"/>
       </classes>
     </classSpec>
@@ -12413,6 +12794,7 @@
       <desc>Groups block-level text elements.</desc>
       <classes>
         <memberOf key="model.rdgPart.text"/>
+        <memberOf key="model.editTransPart.text"/>
       </classes>
     </classSpec>
     <classSpec ident="model.textPhraseLike" module="MEI.shared" type="model">
@@ -12426,11 +12808,12 @@
         class is equivalent to the model.textPhraseLike class without the pb element.</desc>
       <classes>
         <memberOf key="model.rdgPart.text"/>
+        <memberOf key="model.editTransPart.text"/>
         <memberOf key="model.textPhraseLike"/>
       </classes>
     </classSpec>
     <classSpec ident="model.titleLike" module="MEI.shared" type="model">
-      <desc>Groups elements that denote names of a bibliographic item.</desc>
+      <desc>Groups elements that denote the name of a bibliographic item.</desc>
       <classes>
         <memberOf key="model.textPhraseLike.limited"/>
         <memberOf key="model.titlePagePart"/>
@@ -12450,14 +12833,15 @@
       <desc>Groups elements that contain a lyric verse.</desc>
       <classes>
         <memberOf key="model.syllablePart"/>
-        <memberOf key="model.rdgPart.critapp"/>
+        <memberOf key="model.rdgPart.music"/>
+        <memberOf key="model.editTransPart.music"/>
       </classes>
     </classSpec>
     <classSpec ident="model.workIdent" module="MEI.header" type="model">
       <desc>Groups elements that assist in the identification of a work.</desc>
     </classSpec>
     <classSpec ident="model.workLike" type="model" module="MEI.header">
-      <desc>Collects worklike elements.</desc>
+      <desc>Collects work-like elements.</desc>
     </classSpec>
 
     <!-- ELEMENTS -->
@@ -12476,18 +12860,15 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
@@ -12500,6 +12881,13 @@
           </datatype>
         </attDef>
       </attList>
+      <remarks>
+        <p>In no case should <gi scheme="MEI">abbr</gi> contain elements that would not otherwise be
+          permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >abbr</gi> should only contain those elements allowed within <gi scheme="MEI"
+          >verse</gi>.</p>
+      </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI) and Encoded
           Archival Description (EAD) standards.</p>
@@ -12514,12 +12902,7 @@
         <memberOf key="att.lang"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <remarks>
         <p>May indicate the nature of restrictions or the lack of restrictions. Do not confuse this
@@ -12590,20 +12973,16 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
-            <rng:ref name="model.verseLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -12624,6 +13003,11 @@
           the addition. The editor(s) responsible for asserting this particular reading may be
           recorded in the <att>resp</att> attribute. The value of resp must point to one or more
           identifiers declared in the document header.</p>
+        <p>In no case should <gi scheme="MEI">add</gi> contain elements that would not otherwise be
+          permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >add</gi> should only contain those elements allowed within <gi scheme="MEI"
+          >verse</gi>.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -12737,7 +13121,10 @@
       <classes>
         <memberOf key="att.common"/>
         <memberOf key="att.facsimile"/>
-        <memberOf key="att.intervalHarmonic"/>
+        <memberOf key="att.ambitus.anl"/>
+        <memberOf key="att.ambitus.ges"/>
+        <memberOf key="att.ambitus.log"/>
+        <memberOf key="att.ambitus.vis"/>
         <memberOf key="att.metadataPointing"/>
       </classes>
       <content>
@@ -12763,13 +13150,13 @@
       <desc>Container for text that is fixed to a particular page location, regardless of changes
         made to the layout of the measures around it.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.facsimile"/>
         <memberOf key="att.lang"/>
-        <memberOf key="att.startId"/>
-        <memberOf key="att.visualOffset"/>
-        <memberOf key="att.xy"/>
+        <memberOf key="att.anchoredText.anl"/>
+        <memberOf key="att.anchoredText.ges"/>
+        <memberOf key="att.anchoredText.log"/>
+        <memberOf key="att.anchoredText.vis"/>
         <memberOf key="model.graphicPrimitiveLike"/>
       </classes>
       <content>
@@ -12794,8 +13181,8 @@
       </remarks>
     </elementSpec>
     <elementSpec ident="annot" module="MEI.shared">
-      <desc>(annotation) – Provides a short statement explaining the text or indicating the basis
-        for an assertion.</desc>
+      <desc>(annotation) – Provides a statement explaining the text or indicating the basis for an
+        assertion.</desc>
       <classes>
         <memberOf key="att.audience"/>
         <memberOf key="att.bibl"/>
@@ -12814,33 +13201,25 @@
         <memberOf key="model.annotLike"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.headLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
-            <rng:ref name="model.editLike"/>
-            <rng:ref name="model.transcriptionLike"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:choice>
+          <rng:group>
+            <rng:zeroOrMore>
+              <rng:ref name="model.headLike"/>
+            </rng:zeroOrMore>
+            <rng:zeroOrMore>
+              <rng:ref name="model.textComponentLike"/>
+            </rng:zeroOrMore>
+          </rng:group>
+          <rng:zeroOrMore>
+            <rng:choice>
+              <rng:text/>
+              <rng:ref name="model.editLike"/>
+              <rng:ref name="model.textPhraseLike"/>
+              <rng:ref name="model.transcriptionLike"/>
+            </rng:choice>
+          </rng:zeroOrMore>
+        </rng:choice>
       </content>
-      <constraintSpec ident="annot_content_constraint" scheme="isoschematron">
-        <constraint>
-          <sch:rule context="mei:annot[mei:head or mei:lg or mei:p or mei:quote or mei:table]">
-            <sch:assert test="not(mei:head[preceding-sibling::*[not(local-name()='head')]])">Head
-              elements can only occur at the start of annot.</sch:assert>
-            <sch:assert test="not(*[../text()[normalize-space()]])">Mixed content is not allowed
-              when head, lg, p, quote or table elements are used.</sch:assert>
-            <sch:assert
-              test="not(*[not(local-name() eq 'biblList' or local-name() eq 'castList' or local-name() eq 'head' or 
-              local-name() eq 'lg' or local-name() eq 'list' or local-name() eq 'p' or local-name() eq 'quote' or 
-              local-name() eq 'relationList' or local-name() eq 'table')])"
-              >Unstructured text not allowed when head, lg, p, quote or table elements are
-              used.</sch:assert>
-          </sch:rule>
-        </constraint>
-      </constraintSpec>
       <constraintSpec ident="Check_annot_data" scheme="isoschematron">
         <constraint>
           <sch:rule context="mei:annot[@data]">
@@ -13063,12 +13442,7 @@
         <memberOf key="att.lang"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="author" module="MEI.shared">
@@ -13105,6 +13479,9 @@
         <memberOf key="model.pubStmtPart"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:ref name="macro.availabilityPart"/>
       </content>
       <remarks>
@@ -13262,7 +13639,8 @@
         <constraint>
           <sch:rule context="mei:beam[not(@copyof)]">
             <sch:assert
-              test="count(descendant::*[local-name()='note' or local-name()='rest' or               local-name()='chord' or local-name()='space']) &gt; 1"
+              test="count(descendant::*[local-name()='note' or local-name()='rest' or
+              local-name()='chord' or local-name()='space']) &gt; 1"
               >A beam without a copyof attribute must have at least 2 note, rest, chord, or space
               descendants.</sch:assert>
           </sch:rule>
@@ -13488,7 +13866,7 @@
       </remarks>
     </elementSpec>
     <elementSpec ident="bloc" module="MEI.namesdates">
-      <desc>Contains the name of a geo-political unit consisting of two or more nation states or
+      <desc>Contains the name of a geopolitical unit consisting of two or more nation states or
         countries.</desc>
       <classes>
         <memberOf key="att.bibl"/>
@@ -13677,12 +14055,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="carrierForm" module="MEI.header">
@@ -13699,12 +14072,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="castGrp" module="MEI.shared">
@@ -13838,7 +14206,7 @@
               <desc>Category to which the current category is hierarchically subordinate.</desc>
             </valItem>
             <valItem ident="narrower">
-              <desc>Category which is hierarchially subordinate to the current category.</desc>
+              <desc>Category which is hierarchically subordinate to the current category.</desc>
             </valItem>
             <valItem ident="related">
               <desc>Category that is associatively but not hierarchically linked to the current
@@ -13855,7 +14223,6 @@
     <elementSpec ident="cc" module="MEI.midi">
       <desc>(control change) – MIDI parameter/control change.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
         <memberOf key="att.midiNumber"/>
@@ -13872,7 +14239,6 @@
     <elementSpec ident="chan" module="MEI.midi">
       <desc>(channel) – MIDI channel assignment.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
       </classes>
@@ -13945,7 +14311,6 @@
     <elementSpec ident="chanPr" module="MEI.midi">
       <desc>(channel pressure) – MIDI channel pressure/after touch.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
         <memberOf key="att.midiNumber"/>
@@ -14011,6 +14376,10 @@
       <desc>(chord definition) – Chord tablature definition.</desc>
       <classes>
         <memberOf key="att.common"/>
+        <memberOf key="att.chordDef.anl"/>
+        <memberOf key="att.chordDef.ges"/>
+        <memberOf key="att.chordDef.log"/>
+        <memberOf key="att.chordDef.vis"/>
       </classes>
       <content>
         <rng:zeroOrMore>
@@ -14020,14 +14389,6 @@
           <rng:ref name="barre"/>
         </rng:zeroOrMore>
       </content>
-      <attList>
-        <attDef ident="pos" usage="opt">
-          <desc>Records the fret position at which the chord tablature is to be played.</desc>
-          <datatype>
-            <rng:data type="positiveInteger"/>
-          </datatype>
-        </attDef>
-      </attList>
       <remarks>
         <p>An <att>xml:id</att> attribute, while not required by the schema, is needed so that <gi
             scheme="MEI">harm</gi> elements can reference a particular chord definition. The
@@ -14041,37 +14402,15 @@
       <desc>An individual pitch in a chord defined by a <gi scheme="MEI">chordDef</gi>
         element.</desc>
       <classes>
-        <memberOf key="att.accidental.gestural"/>
         <memberOf key="att.common"/>
-        <memberOf key="att.intervalHarmonic"/>
-        <memberOf key="att.pitched"/>
+        <memberOf key="att.chordMember.anl"/>
+        <memberOf key="att.chordMember.ges"/>
+        <memberOf key="att.chordMember.log"/>
+        <memberOf key="att.chordMember.vis"/>
       </classes>
       <content>
         <rng:empty/>
       </content>
-      <attList>
-        <attDef ident="string" usage="opt">
-          <desc>Holds the number of the string to be played.</desc>
-          <datatype>
-            <rng:data type="nonNegativeInteger"/>
-          </datatype>
-        </attDef>
-        <attDef ident="fret" usage="opt">
-          <desc>Records the location at which a string should be stopped against a fret.</desc>
-          <datatype>
-            <rng:ref name="data.FRETNUMBER.limited"/>
-          </datatype>
-        </attDef>
-        <attDef ident="fing" usage="opt">
-          <desc>Indicates which finger, if any, should be used to play an individual string. The
-            index, middle, ring, and little fingers are represented by the values 1-4, while 't' is
-            for the thumb. The values 'x' and 'o' indicate muffled and open strings,
-            respectively.</desc>
-          <datatype>
-            <rng:ref name="data.FINGER.FRET"/>
-          </datatype>
-        </attDef>
-      </attList>
       <remarks>
         <p>The <att>string</att>, <att>fret</att>, and <att>fing</att> attributes are provided in
           order to create displayable chord tablature grids. The <att>inth</att> (harmonic interval)
@@ -14315,12 +14654,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <remarks>
         <p>This element is modelled on an element in the Encoded Archival Description (EAD)
@@ -14416,12 +14750,7 @@
         <memberOf key="att.lang"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="contributor" module="MEI.shared">
@@ -14521,18 +14850,15 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
@@ -14544,6 +14870,11 @@
           of the <gi scheme="MEI">corr</gi> element. If the correction was made in the source, resp
           should be used to identify the hand of the corrector. The value of resp must point to one
           or more identifiers declared in the document header.</p>
+        <p>In no case should <gi scheme="MEI">corr</gi> contain elements that would not otherwise be
+          permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >corr</gi> should only contain those elements allowed within <gi scheme="MEI"
+          >verse</gi>.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -14561,6 +14892,9 @@
         <memberOf key="model.editorialDeclPart"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:ref name="model.pLike"/>
         </rng:oneOrMore>
@@ -14590,7 +14924,7 @@
       </remarks>
     </elementSpec>
     <elementSpec ident="country" module="MEI.namesdates">
-      <desc>Contains the name of a geo-political unit, such as a nation, country, colony, or
+      <desc>Contains the name of a geopolitical unit, such as a nation, country, colony, or
         commonwealth, larger than or administratively superior to a region and smaller than a
         bloc.</desc>
       <classes>
@@ -14698,12 +15032,13 @@
       </classes>
       <content>
         <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
+        <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="date"/>
             <rng:ref name="dedication"/>
-            <rng:ref name="dedicatee"/>
-            <rng:ref name="model.nameLike"/>
+            <rng:ref name="model.textPhraseLike.limited"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -14714,7 +15049,6 @@
     <elementSpec ident="cue" module="MEI.midi">
       <desc>MIDI cue point.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.lang"/>
         <memberOf key="att.midi.event"/>
@@ -14727,17 +15061,12 @@
       <desc>A curved line that cannot be represented by a more specific element, such as a
         slur.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
-        <memberOf key="att.color"/>
         <memberOf key="att.common"/>
-        <memberOf key="att.curvature"/>
-        <memberOf key="att.curveRend"/>
+        <memberOf key="att.curve.anl"/>
+        <memberOf key="att.curve.ges"/>
+        <memberOf key="att.curve.log"/>
+        <memberOf key="att.curve.vis"/>
         <memberOf key="att.facsimile"/>
-        <memberOf key="att.startEndId"/>
-        <memberOf key="att.visualOffset"/>
-        <memberOf key="att.visualOffset2"/>
-        <memberOf key="att.xy"/>
-        <memberOf key="att.xy2"/>
         <memberOf key="model.graphicPrimitiveLike"/>
       </classes>
       <content>
@@ -14806,18 +15135,15 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
@@ -14830,6 +15156,13 @@
           </datatype>
         </attDef>
       </attList>
+      <remarks>
+        <p>In no case should <gi scheme="MEI">damage</gi> contain elements that would not otherwise
+          be permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >damage</gi> should only contain those elements allowed within <gi scheme="MEI"
+            >verse</gi>.</p>
+      </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
           standard.</p>
@@ -14877,6 +15210,14 @@
           </rng:choice>
         </rng:zeroOrMore>
       </content>
+      <constraintSpec ident="check_dedicatee" scheme="isoschematron">
+        <constraint>
+          <sch:rule context="mei:dedicatee">
+            <sch:assert test="not(ancestor::mei:dedicatee)">The dedicatee element may not be
+              recursively nested.</sch:assert>
+          </sch:rule>
+        </constraint>
+      </constraintSpec>
     </elementSpec>
     <elementSpec ident="dedication" module="MEI.header">
       <desc>Contains a dedicatory statement.</desc>
@@ -14889,12 +15230,24 @@
       </classes>
       <content>
         <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
+          <rng:ref name="model.headLike"/>
         </rng:zeroOrMore>
+        <rng:choice>
+          <rng:zeroOrMore>
+            <rng:ref name="model.textComponentLike"/>
+          </rng:zeroOrMore>
+          <rng:zeroOrMore>
+            <rng:choice>
+              <rng:text/>
+              <rng:ref name="model.textPhraseLike.limited"/>
+            </rng:choice>
+          </rng:zeroOrMore>
+        </rng:choice>
       </content>
+      <remarks>
+        <p>This element uses a variant of the content model provided by
+          macro.struc-unstrucContent.</p>
+      </remarks>
     </elementSpec>
     <elementSpec ident="del" module="MEI.edittrans">
       <desc>(deletion) – Contains information deleted, marked as deleted, or otherwise indicated as
@@ -14912,20 +15265,16 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
-            <rng:ref name="model.verseLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -14937,6 +15286,11 @@
           should be pointed to using the <att>hand</att> attribute. The <att>rend</att> attribute
           may be used to record the method used to make the deletion (overstrike, strike[through],
           etc.).</p>
+        <p>In no case should <gi scheme="MEI">del</gi> contain elements that would not otherwise be
+          permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >del</gi> should only contain those elements allowed within <gi scheme="MEI"
+          >verse</gi>.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on elements in the Text Encoding Initiative (TEI) and Encoded
@@ -14987,7 +15341,7 @@
           standard.</p>
       </remarks>
     </elementSpec>
-    <elementSpec ident="dimensions" module="MEI.header">
+    <elementSpec ident="dimensions" module="MEI.shared">
       <desc>Information about the physical size of a bibliographic source; usually includes
         numerical data.</desc>
       <classes>
@@ -14999,10 +15353,12 @@
       </classes>
       <content>
         <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
+        <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
             <rng:ref name="model.textPhraseLike.limited"/>
-            <rng:ref name="model.dimLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -15136,6 +15492,7 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:ref name="model.divLike"/>
+            <rng:ref name="model.figureLike"/>
             <rng:ref name="model.textComponentLike"/>
             <rng:ref name="sp"/>
           </rng:choice>
@@ -15156,7 +15513,7 @@
               <desc>A summary of the content of a text as continuous prose.</desc>
             </valItem>
             <valItem ident="ack">
-              <desc>A formal declaration of acknowledgement by the author in which persons and
+              <desc>A formal declaration of acknowledgment by the author in which persons and
                 institutions are thanked for their part in the creation of a text.</desc>
             </valItem>
             <valItem ident="appendix">
@@ -15336,10 +15693,16 @@
         <memberOf key="att.lang"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:ref name="model.editionLike"/>
           <rng:zeroOrMore>
-            <rng:ref name="respStmt"/>
+            <rng:choice>
+              <rng:ref name="model.respLikePart"/>
+              <rng:ref name="respStmt"/>
+            </rng:choice>
           </rng:zeroOrMore>
         </rng:oneOrMore>
       </content>
@@ -15415,6 +15778,9 @@
         <memberOf key="model.headerPart"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:optional>
           <rng:ref name="appInfo"/>
         </rng:optional>
@@ -15446,7 +15812,6 @@
       <desc>Alternative ending for a repeated passage of music; i.e., prima volta, seconda volta,
         etc.</desc>
       <classes>
-        <memberOf key="att.alignment"/>
         <memberOf key="att.common"/>
         <memberOf key="att.ending.anl"/>
         <memberOf key="att.ending.ges"/>
@@ -15584,12 +15949,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <remarks>
         <p>This element is modelled on an element in the Encoded Archival Description (EAD)
@@ -15610,18 +15970,15 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
@@ -15634,6 +15991,13 @@
           </datatype>
         </attDef>
       </attList>
+      <remarks>
+        <p>In no case should <gi scheme="MEI">expan</gi> contain elements that would not otherwise
+          be permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >expan</gi> should only contain those elements allowed within <gi scheme="MEI"
+            >verse</gi>.</p>
+      </remarks>
       <remarks>
         <p>This element is modelled on elements in the Text Encoding Initiative (TEI) and Encoded
           Archival Description (EAD) standards.</p>
@@ -15668,6 +16032,9 @@
         <memberOf key="model.expressionLike"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:zeroOrMore>
           <rng:ref name="model.identifierLike"/>
         </rng:zeroOrMore>
@@ -15748,8 +16115,7 @@
     </elementSpec>
     <elementSpec ident="extent" module="MEI.shared">
       <desc>Used to express size in terms other than physical dimensions, such as number of pages,
-        number of records in file, number of bytes, performance duration for music, audio recordings
-        and visual projections, etc.</desc>
+        records, bytes, physical components, etc.</desc>
       <classes>
         <memberOf key="att.common"/>
         <memberOf key="att.bibl"/>
@@ -15780,6 +16146,7 @@
     <elementSpec ident="extMeta" module="MEI.header">
       <desc>(extended metadata) – Provides a container element for non-MEI metadata formats.</desc>
       <classes>
+        <memberOf key="att.bibl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.whitespace"/>
       </classes>
@@ -15875,7 +16242,6 @@
         chordal accompaniment. Sometimes called Generalbass, thoroughbass, or basso continuo.</desc>
       <classes>
         <memberOf key="att.common"/>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.facsimile"/>
         <memberOf key="model.figbassLike"/>
       </classes>
@@ -16914,7 +17280,6 @@
     <elementSpec ident="hex" module="MEI.midi">
       <desc>Arbitrary MIDI data in hexadecimal form.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
       </classes>
@@ -17002,8 +17367,8 @@
         <memberOf key="att.bibl"/>
         <memberOf key="model.incipLike"/>
       </classes>
-      <!-- Can XSLT be used within content to "select" an incipit from the already-encoded MEI 
-        transcription in the music element?
+      <!-- Can XSLT be used within content to "select" an incipit from the 
+        already-encoded MEI transcription in the music element?
         <rng:ref name="macro.XSLT"/> -->
       <content>
         <rng:zeroOrMore>
@@ -17038,11 +17403,11 @@
         </rng:optional>
         <rng:zeroOrMore>
           <rng:choice>
+            <rng:ref name="model.annotLike"/>
+            <rng:ref name="model.graphicLike"/>
+            <rng:ref name="model.scoreLike"/>
             <rng:ref name="incipCode"/>
             <rng:ref name="incipText"/>
-            <rng:ref name="model.scoreLike"/>
-            <rng:ref name="model.graphicLike"/>
-            <rng:ref name="annot"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -17105,6 +17470,9 @@
       </classes>
       <content>
         <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
+        <rng:zeroOrMore>
           <rng:choice>
             <rng:ref name="model.pLike"/>
             <rng:ref name="model.lgLike"/>
@@ -17122,22 +17490,17 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-            <rng:ref name="model.editLike"/>
-            <rng:ref name="model.transcriptionLike"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="instrDef" module="MEI.midi">
       <desc>(instrument definition) – MIDI instrument declaration.</desc>
       <classes>
         <memberOf key="att.common"/>
-        <memberOf key="att.channelized"/>
-        <memberOf key="att.midiInstrument"/>
+        <memberOf key="att.instrDef.anl"/>
+        <memberOf key="att.instrDef.ges"/>
+        <memberOf key="att.instrDef.log"/>
+        <memberOf key="att.instrDef.vis"/>
         <memberOf key="model.instrDefLike"/>
       </classes>
       <content>
@@ -17171,6 +17534,9 @@
         <memberOf key="model.editorialDeclPart"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref naem="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:ref name="model.pLike"/>
         </rng:oneOrMore>
@@ -17191,6 +17557,9 @@
         <memberOf key="model.itemLike"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:zeroOrMore>
           <rng:ref name="model.identifierLike"/>
         </rng:zeroOrMore>
@@ -17337,6 +17706,7 @@
             <rng:choice>
               <rng:text/>
               <rng:ref name="model.editLike"/>
+              <rng:ref name="model.sylLike"/>
               <rng:ref name="model.textPhraseLike"/>
               <rng:ref name="model.transcriptionLike"/>
             </rng:choice>
@@ -17361,8 +17731,8 @@
       </remarks>
     </elementSpec>
     <elementSpec ident="label" module="MEI.shared">
-      <desc>A container for document text that identifies the feature to which it is
-        attached.</desc>
+      <desc>A container for document text that identifies the feature to which it is attached. For a
+        "tool tip" or other generated label, use the <att>label</att> attribute.</desc>
       <classes>
         <memberOf key="att.common"/>
         <memberOf key="att.facsimile"/>
@@ -17383,11 +17753,13 @@
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
           standard.</p>
-        <p>Don't confuse this element, which is used to capture text appearing in the document, with
-          the <att>label</att> attribute, which provides a designation for an element.</p>
+        <p>Don't confuse this element, which is used to capture labelling text appearing in the
+          document, with the <att>label</att> attribute, which records text to be used to generate a
+          designation for the element to which it's attached, a "tool tip" or prefatory text, for
+          example.</p>
       </remarks>
     </elementSpec>
-    <elementSpec ident="label2" module="MEI.shared">
+    <elementSpec ident="labelAbbr" module="MEI.shared">
       <desc>A label on the pages following the first.</desc>
       <classes>
         <memberOf key="att.common"/>
@@ -17476,13 +17848,13 @@
       <content>
         <rng:zeroOrMore>
           <rng:choice>
-            <rng:ref name="model.appLike"/>
-            <rng:ref name="model.milestoneLike.music"/>
             <rng:ref name="model.annotLike"/>
-            <rng:ref name="model.graphicPrimitiveLike"/>
+            <rng:ref name="model.appLike"/>
             <rng:ref name="model.editLike"/>
-            <rng:ref name="model.transcriptionLike"/>
+            <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -17516,7 +17888,6 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:ref name="model.labelLike"/>
-            <rng:ref name="labelAbbr"/>
           </rng:choice>
         </rng:zeroOrMore>
         <rng:zeroOrMore>
@@ -17543,8 +17914,12 @@
         <attDef ident="func" usage="opt">
           <desc>States whether the line break follows a single line or a line group.</desc>
           <valList type="closed">
-            <valItem ident="line"/>
-            <valItem ident="group"/>
+            <valItem ident="line">
+              <desc>Follows a verse line.</desc>
+            </valItem>
+            <valItem ident="group">
+              <desc>Follows a group of verse lines.</desc>
+            </valItem>
           </valList>
         </attDef>
       </attList>
@@ -17573,20 +17948,20 @@
       </classes>
       <content>
         <rng:zeroOrMore>
-          <rng:ref name="expansion"/>
-        </rng:zeroOrMore>
-        <rng:zeroOrMore>
           <rng:choice>
+            <rng:text/>
             <rng:ref name="model.appLike"/>
             <rng:ref name="model.divLike"/>
-            <rng:ref name="model.milestoneLike.music"/>
-            <rng:ref name="model.staffGrpLike"/>
-            <rng:ref name="model.annotLike"/>
-            <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.editLike"/>
-            <rng:ref name="model.transcriptionLike"/>
-            <rng:ref name="model.rdgPart.critapp"/>
+            <rng:ref name="model.fLike"/>
+            <rng:ref name="model.graphicPrimitiveLike"/>
+            <rng:ref name="model.layerPart"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.rdgPart"/>
             <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
+            <rng:ref name="model.transcriptionLike"/>
+            <rng:ref name="expansion"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -17599,6 +17974,11 @@
           use it at all. An integer indicating the position of this reading in a sequence, when
           there is reason to presume a sequence of the variant readings, may be captured in the
             <att>seq</att> attribute.</p>
+        <p>In no case should <gi scheme="MEI">lem</gi> contain elements that would not otherwise be
+          permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >lem</gi> should only contain those elements allowed within <gi scheme="MEI"
+          >verse</gi>.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -17981,7 +18361,6 @@
     <elementSpec ident="marker" module="MEI.midi">
       <desc>MIDI marker meta-event.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.lang"/>
         <memberOf key="att.midi.event"/>
@@ -17993,10 +18372,13 @@
     <elementSpec ident="mdiv" module="MEI.shared">
       <desc>(musical division) – Contains a subdivision of the body of a musical text.</desc>
       <classes>
-        <memberOf key="att.alignment"/>
         <memberOf key="att.common"/>
         <memberOf key="att.facsimile"/>
         <memberOf key="att.metadataPointing"/>
+        <memberOf key="att.mdiv.anl"/>
+        <memberOf key="att.mdiv.ges"/>
+        <memberOf key="att.mdiv.log"/>
+        <memberOf key="att.mdiv.vis"/>
         <memberOf key="model.mdivLike"/>
       </classes>
       <content>
@@ -18033,15 +18415,14 @@
       <desc>Unit of musical time consisting of a fixed number of note values of a given type, as
         determined by the prevailing meter, and delimited in musical notation by bar lines.</desc>
       <classes>
-        <memberOf key="att.alignment"/>
         <memberOf key="att.common"/>
         <memberOf key="att.facsimile"/>
         <memberOf key="att.metadataPointing"/>
         <memberOf key="att.pointing"/>
+        <memberOf key="att.measure.anl"/>
+        <memberOf key="att.measure.ges"/>
         <memberOf key="att.measure.log"/>
         <memberOf key="att.measure.vis"/>
-        <memberOf key="att.measure.ges"/>
-        <memberOf key="att.measure.anl"/>
         <memberOf key="att.targetEval"/>
         <memberOf key="model.measureLike"/>
       </classes>
@@ -18051,14 +18432,14 @@
         </rng:optional>
         <rng:zeroOrMore>
           <rng:choice>
+            <rng:ref name="model.annotLike"/>
             <rng:ref name="model.appLike"/>
+            <rng:ref name="model.editLike"/>
+            <rng:ref name="model.graphicPrimitiveLike"/>
+            <rng:ref name="model.measurePart"/>
             <rng:ref name="model.milestoneLike.music"/>
             <rng:ref name="model.staffDefLike"/>
-            <rng:ref name="model.annotLike"/>
-            <rng:ref name="model.graphicPrimitiveLike"/>
-            <rng:ref name="model.editLike"/>
             <rng:ref name="model.transcriptionLike"/>
-            <rng:ref name="model.measurePart"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -18236,7 +18617,6 @@
     <elementSpec ident="metaText" module="MEI.midi">
       <desc>MIDI text meta-event.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.lang"/>
         <memberOf key="att.midi.event"/>
@@ -18344,7 +18724,7 @@
     <elementSpec ident="mNum" module="MEI.cmn">
       <desc>(measure number) – Designation, name, or label for a measure, often but not always
         consisting of digits. Use this element when the <att>n</att> attribute on <gi scheme="MEI"
-          >measure</gi> does not adaquately capture the appearance or placement of the measure
+          >measure</gi> does not adequately capture the appearance or placement of the measure
         number/label.</desc>
       <classes>
         <memberOf key="att.common"/>
@@ -18565,7 +18945,6 @@
         </constraint>
       </constraintSpec>
       <attList>
-        <!-- type is expanded in order to encourage the use of suggested values -->
         <attDef ident="type" usage="opt">
           <desc>Characterizes the name in some sense, using any convenient classification scheme or
             typology that employs single-token labels.</desc>
@@ -18698,27 +19077,6 @@
         </rng:zeroOrMore>
       </content>
     </elementSpec>
-    <elementSpec ident="normalization" module="MEI.header">
-      <desc>Indicates the extent of normalization or regularization of the original source carried
-        out in converting it to electronic form.</desc>
-      <classes>
-        <memberOf key="att.common"/>
-        <memberOf key="att.bibl"/>
-        <memberOf key="att.dataPointing"/>
-        <memberOf key="att.lang"/>
-        <memberOf key="att.regularMethod"/>
-        <memberOf key="model.editorialDeclPart"/>
-      </classes>
-      <content>
-        <rng:oneOrMore>
-          <rng:ref name="model.pLike"/>
-        </rng:oneOrMore>
-      </content>
-      <remarks>
-        <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
-          standard.</p>
-      </remarks>
-    </elementSpec>
     <elementSpec ident="nameLink" module="MEI.namesdates">
       <desc>(name link) – Contains a connecting phrase or link used within a name but not regarded
         as part of it, such as "van der" or "of", "from", etc.</desc>
@@ -18740,6 +19098,30 @@
             <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
+      </content>
+      <remarks>
+        <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
+          standard.</p>
+      </remarks>
+    </elementSpec>
+    <elementSpec ident="normalization" module="MEI.header">
+      <desc>Indicates the extent of normalization or regularization of the original source carried
+        out in converting it to electronic form.</desc>
+      <classes>
+        <memberOf key="att.common"/>
+        <memberOf key="att.bibl"/>
+        <memberOf key="att.dataPointing"/>
+        <memberOf key="att.lang"/>
+        <memberOf key="att.regularMethod"/>
+        <memberOf key="model.editorialDeclPart"/>
+      </classes>
+      <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
+        <rng:oneOrMore>
+          <rng:ref name="model.pLike"/>
+        </rng:oneOrMore>
       </content>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -18787,7 +19169,6 @@
     <elementSpec ident="noteOff" module="MEI.midi">
       <desc>MIDI note-off event.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
         <memberOf key="att.midiNumber"/>
@@ -18799,7 +19180,6 @@
     <elementSpec ident="noteOn" module="MEI.midi">
       <desc>MIDI note-on event.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
         <memberOf key="att.midiNumber"/>
@@ -18919,20 +19299,16 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
-            <rng:ref name="model.verseLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -18942,6 +19318,11 @@
             <att>resp</att> attribute. The value of resp must point to one or more identifiers
           declared in the document header. The <att>cert</att> attribute signifies the degree of
           certainty ascribed to the transcription of the original text.</p>
+        <p>In no case should <gi scheme="MEI">orig</gi> contain elements that would not otherwise be
+          permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >orig</gi> should only contain those elements allowed within <gi scheme="MEI"
+          >verse</gi>.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -19046,12 +19427,7 @@
         <memberOf key="att.lang"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="p" module="MEI.shared">
@@ -19110,14 +19486,16 @@
       <content>
         <rng:zeroOrMore>
           <rng:choice>
+            <rng:ref name="model.annotLike"/>
             <rng:ref name="model.appLike"/>
             <rng:ref name="model.divLike"/>
-            <rng:ref name="model.milestoneLike.music"/>
-            <rng:ref name="model.annotLike"/>
-            <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.editLike"/>
-            <rng:ref name="model.transcriptionLike"/>
+            <rng:ref name="model.graphicPrimitiveLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.scoreDefLike"/>
             <rng:ref name="model.scorePart"/>
+            <rng:ref name="model.staffDefLike"/>
+            <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -19155,7 +19533,6 @@
       <desc>(page break) – An empty formatting element that forces text to begin on a new
         page.</desc>
       <classes>
-        <memberOf key="att.alignment"/>
         <memberOf key="att.common"/>
         <memberOf key="att.facsimile"/>
         <memberOf key="att.pointing"/>
@@ -19220,12 +19597,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <attList>
         <attDef ident="isodur" usage="opt">
@@ -19663,6 +20035,9 @@
       </classes>
       <content>
         <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
+        <rng:zeroOrMore>
           <rng:ref name="model.pLike"/>
         </rng:zeroOrMore>
         <rng:zeroOrMore>
@@ -19691,6 +20066,9 @@
       </classes>
       <content>
         <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
+        <rng:zeroOrMore>
           <rng:group>
             <rng:ref name="model.repositoryLike"/>
             <rng:zeroOrMore>
@@ -19718,12 +20096,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <remarks>
         <p>All materials may be described in a single <gi scheme="MEI">physMedium</gi> element or
@@ -19745,12 +20118,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <remarks>
         <p>While it is often called a "plate number", it does not always contain numbers. The
@@ -19768,18 +20136,12 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="port" module="MEI.midi">
       <desc>MIDI port.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
         <memberOf key="att.midiNumber"/>
@@ -19843,6 +20205,9 @@
       </classes>
       <content>
         <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
+        <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
             <rng:ref name="model.textPhraseLike.limited"/>
@@ -19874,7 +20239,6 @@
     <elementSpec ident="prog" module="MEI.midi">
       <desc>(program) – MIDI program change.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
         <memberOf key="att.midiNumber"/>
@@ -19971,6 +20335,9 @@
         <memberOf key="att.lang"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:choice>
           <rng:optional>
             <rng:ref name="eventList"/>
@@ -20066,6 +20433,9 @@
         <memberOf key="att.bibl"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:choice>
           <rng:optional>
             <rng:ref name="unpub"/>
@@ -20098,7 +20468,7 @@
           <rng:choice>
             <rng:text/>
             <rng:ref name="model.paracontentPart"/>
-            <rng:ref name="p"/>
+            <rng:ref name="model.pLike"/>
             <rng:ref name="sp"/>
           </rng:choice>
         </rng:zeroOrMore>
@@ -20141,20 +20511,20 @@
       </classes>
       <content>
         <rng:zeroOrMore>
-          <rng:ref name="expansion"/>
-        </rng:zeroOrMore>
-        <rng:zeroOrMore>
           <rng:choice>
+            <rng:text/>
             <rng:ref name="model.appLike"/>
             <rng:ref name="model.divLike"/>
-            <rng:ref name="model.milestoneLike.music"/>
-            <rng:ref name="model.staffGrpLike"/>
-            <rng:ref name="model.annotLike"/>
-            <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.editLike"/>
-            <rng:ref name="model.transcriptionLike"/>
-            <rng:ref name="model.rdgPart.critapp"/>
+            <rng:ref name="model.fLike"/>
+            <rng:ref name="model.graphicPrimitiveLike"/>
+            <rng:ref name="model.layerPart"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.rdgPart"/>
             <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
+            <rng:ref name="model.transcriptionLike"/>
+            <rng:ref name="expansion"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -20312,20 +20682,16 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
-            <rng:ref name="model.verseLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -20336,6 +20702,11 @@
           material may be recorded in the <att>resp</att> attribute. The value of <att>resp</att>
           must point to one or more identifiers declared in the document header. The <att>cert</att>
           attribute signifies the degree of certainty ascribed to the regularized reading.</p>
+        <p>In no case should <gi scheme="MEI">reg</gi> contain elements that would not otherwise be
+          permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >reg</gi> should only contain those elements allowed within <gi scheme="MEI"
+          >verse</gi>.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -20660,6 +21031,9 @@
         <memberOf key="model.respLike"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:choice>
           <rng:zeroOrMore>
             <rng:choice>
@@ -20738,20 +21112,16 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
-            <rng:ref name="model.verseLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -20765,6 +21135,13 @@
         </attDef>
       </attList>
       <remarks>
+        <p>In no case should <gi scheme="MEI">restore</gi> contain elements that would not otherwise
+          be permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >restore</gi> should only contain those elements allowed within <gi scheme="MEI"
+            >verse</gi>.</p>
+      </remarks>
+      <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
           standard.</p>
       </remarks>
@@ -20777,6 +21154,9 @@
         <memberOf key="att.bibl"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:ref name="change"/>
         </rng:oneOrMore>
@@ -20884,14 +21264,13 @@
       <desc>(system break) – An empty formatting element that forces musical notation to begin on a
         new line.</desc>
       <classes>
-        <memberOf key="att.alignment"/>
         <memberOf key="att.common"/>
         <memberOf key="att.facsimile"/>
         <memberOf key="att.source"/>
+        <memberOf key="att.sb.anl"/>
+        <memberOf key="att.sb.ges"/>
         <memberOf key="att.sb.log"/>
         <memberOf key="att.sb.vis"/>
-        <memberOf key="att.sb.ges"/>
-        <memberOf key="att.sb.anl"/>
         <memberOf key="model.milestoneLike.music"/>
       </classes>
       <content>
@@ -20918,20 +21297,22 @@
       <content>
         <rng:zeroOrMore>
           <rng:choice>
+            <rng:ref name="model.annotLike"/>
             <rng:ref name="model.appLike"/>
             <rng:ref name="model.divLike"/>
-            <rng:ref name="model.milestoneLike.music"/>
-            <rng:ref name="model.annotLike"/>
-            <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.editLike"/>
-            <rng:ref name="model.transcriptionLike"/>
+            <rng:ref name="model.graphicPrimitiveLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.scoreDefLike"/>
             <rng:ref name="model.scorePart"/>
+            <rng:ref name="model.staffDefLike"/>
+            <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
       <remarks>
         <p>Since the <gi scheme="MEI">measure</gi> element is optional, a score may consist entirely
-          of pagebreaks, each of which points to a page image. <gi scheme="MEI">div</gi> elements
+          of page breaks, each of which points to a page image. <gi scheme="MEI">div</gi> elements
           are allowed preceding and following sections of music data in order to accommodate blocks
           of explanatory text.</p>
       </remarks>
@@ -20998,21 +21379,20 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:text/>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="section" module="MEI.shared">
       <desc>Segment of music data.</desc>
       <classes>
-        <memberOf key="att.alignment"/>
         <memberOf key="att.common"/>
         <memberOf key="att.facsimile"/>
         <memberOf key="att.metadataPointing"/>
         <memberOf key="att.pointing"/>
+        <memberOf key="att.section.anl"/>
+        <memberOf key="att.section.ges"/>
         <memberOf key="att.section.log"/>
         <memberOf key="att.section.vis"/>
-        <memberOf key="att.section.ges"/>
-        <memberOf key="att.section.anl"/>
         <memberOf key="att.targetEval"/>
         <memberOf key="model.sectionLike"/>
       </classes>
@@ -21053,7 +21433,6 @@
         level.</desc>
       <classes>
         <memberOf key="att.common"/>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.facsimile"/>
         <memberOf key="att.lang"/>
         <memberOf key="model.textPhraseLike.limited"/>
@@ -21062,8 +21441,9 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.textPhraseLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.sylLike"/>
+            <rng:ref name="model.textPhraseLike"/>
             <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
@@ -21084,6 +21464,9 @@
         <memberOf key="model.editorialDeclPart"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:ref name="model.pLike"/>
         </rng:oneOrMore>
@@ -21096,7 +21479,6 @@
     <elementSpec ident="seqNum" module="MEI.midi">
       <desc>(sequence number) – MIDI sequence number.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
       </classes>
@@ -21128,13 +21510,14 @@
       <content>
         <rng:zeroOrMore>
           <rng:choice>
-            <rng:ref name="model.titleLike"/>
-            <rng:ref name="model.locrefLike"/>
-            <rng:ref name="editor"/>
-            <rng:ref name="respStmt"/>
-            <rng:ref name="extent"/>
+            <rng:text/>
             <rng:ref name="model.identifierLike"/>
+            <rng:ref name="model.locrefLike"/>
             <rng:ref name="model.pLike"/>
+            <rng:ref name="model.titleLike"/>
+            <rng:ref name="editor"/>
+            <rng:ref name="extent"/>
+            <rng:ref name="respStmt"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -21151,12 +21534,15 @@
         <memberOf key="att.bibl"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:ref name="model.titleLike"/>
         </rng:oneOrMore>
         <rng:zeroOrMore>
           <rng:choice>
-            <rng:ref name="editor"/>
+            <rng:ref name="model.respLikePart"/>
             <rng:ref name="respStmt"/>
           </rng:choice>
         </rng:zeroOrMore>
@@ -21185,7 +21571,7 @@
     </elementSpec>
     <elementSpec ident="settlement" module="MEI.namesdates">
       <desc>Contains the name of a settlement such as a city, town, or village identified as a
-        single geo-political or administrative unit.</desc>
+        single geopolitical or administrative unit.</desc>
       <classes>
         <memberOf key="att.bibl"/>
         <memberOf key="att.common"/>
@@ -21223,18 +21609,15 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
@@ -21242,6 +21625,11 @@
       <remarks>
         <p>A correction for the apparent error may be given in an accompanying child or sibling <gi
             scheme="MEI">corr</gi> element.</p>
+        <p>In no case should <gi scheme="MEI">sic</gi> contain elements that would not otherwise be
+          permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >sic</gi> should only contain those elements allowed within <gi scheme="MEI"
+          >verse</gi>.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -21355,6 +21743,9 @@
         <memberOf key="model.manifestationLike"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:zeroOrMore>
           <rng:ref name="model.identifierLike"/>
         </rng:zeroOrMore>
@@ -21556,12 +21947,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="sponsor" module="MEI.shared">
@@ -21654,24 +22040,27 @@
       <content>
         <rng:zeroOrMore>
           <rng:choice>
-            <rng:ref name="model.appLike"/>
-            <rng:ref name="model.milestoneLike.music"/>
             <rng:ref name="model.annotLike"/>
-            <rng:ref name="model.graphicPrimitiveLike"/>
+            <rng:ref name="model.appLike"/>
             <rng:ref name="model.editLike"/>
-            <rng:ref name="model.transcriptionLike"/>
+            <rng:ref name="model.graphicPrimitiveLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.staffDefLike"/>
             <rng:ref name="model.staffPart"/>
+            <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
-      <!--<constraintSpec ident="staffOrganization" scheme="isoschematron">
-            <constraint>
-              <sch:rule context="mei:staff">
-                <sch:assert test="not(descendant::mei:staff)">A staff cannot have staff
-                  descendants.</sch:assert>
-              </sch:rule>
-            </constraint>
-          </constraintSpec>-->
+      <!--
+        <constraintSpec ident="staffOrganization" scheme="isoschematron">
+          <constraint>
+            <sch:rule context="mei:staff">
+              <sch:assert test="not(descendant::mei:staff)">A staff cannot have staff
+                descendants.</sch:assert>
+            </sch:rule>
+          </constraint>
+        </constraintSpec>
+      -->
       <constraintSpec ident="checkStaff_n" scheme="isoschematron">
         <constraint>
           <sch:rule context="mei:staff[@n]">
@@ -21713,7 +22102,6 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:ref name="model.labelLike"/>
-            <rng:ref name="labelAbbr"/>
           </rng:choice>
         </rng:zeroOrMore>
         <rng:zeroOrMore>
@@ -21782,8 +22170,8 @@
         <constraint>
           <sch:rule context="mei:staffDef[@tab.strings and @lines]">
             <sch:let name="countTokens" value="count(tokenize(normalize-space(@tab.strings), '\s'))"/>
-            <sch:assert test="$countTokens = 1 or $countTokens = @lines">The tab.strings attribute
-              must have the same number of values as there are staff lines.</sch:assert>
+            <sch:assert test="$countTokens = @lines">The tab.strings attribute must have the same
+              number of values as there are staff lines.</sch:assert>
           </sch:rule>
         </constraint>
       </constraintSpec>
@@ -21793,8 +22181,8 @@
             <sch:let name="countTokens" value="count(tokenize(normalize-space(@tab.strings), '\s'))"/>
             <sch:let name="thisstaff" value="@n"/>
             <sch:assert
-              test="$countTokens = 1 or $countTokens = preceding::mei:staffDef[@n=$thisstaff and @lines][1]/@lines"
-              >The tab.strings attribute must have the same number of values as there are staff
+              test="$countTokens = preceding::mei:staffDef[@n=$thisstaff and @lines][1]/@lines">The
+              tab.strings attribute must have the same number of values as there are staff
               lines.</sch:assert>
           </sch:rule>
         </constraint>
@@ -21865,7 +22253,6 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:ref name="model.labelLike"/>
-            <rng:ref name="labelAbbr"/>
           </rng:choice>
         </rng:zeroOrMore>
         <rng:zeroOrMore>
@@ -21964,6 +22351,9 @@
         <memberOf key="model.editorialDeclPart"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:ref name="model.pLike"/>
         </rng:oneOrMore>
@@ -22060,20 +22450,16 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
-            <rng:ref name="model.verseLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -22088,6 +22474,11 @@
           value of resp must point to one or more identifiers declared in the document header. The
             <att>cert</att> attribute signifies the degree of certainty ascribed to the supplied
           material.</p>
+        <p>In no case should <gi scheme="MEI">supplied</gi> contain elements that would not
+          otherwise be permitted to occur within the parent of its own <gi scheme="MEI">app</gi>
+          ancestor. For example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi
+            scheme="MEI">supplied</gi> should only contain those elements allowed within <gi
+            scheme="MEI">verse</gi>.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -22158,24 +22549,28 @@
       <desc>Neume notation can be thought of as "neumed text". Therefore, the syllable element
         provides high-level organization in this repertoire.</desc>
       <classes>
-        <memberOf key="att.alignment"/>
         <memberOf key="att.common"/>
+        <memberOf key="att.syllable.anl"/>
+        <memberOf key="att.syllable.ges"/>
+        <memberOf key="att.syllable.log"/>
+        <memberOf key="att.syllable.vis"/>
         <memberOf key="model.syllableLike"/>
       </classes>
       <content>
         <rng:zeroOrMore>
           <rng:choice>
+            <rng:ref name="model.annotLike"/>
             <rng:ref name="model.appLike"/>
             <rng:ref name="model.divLike"/>
+            <rng:ref name="model.editLike"/>
+            <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.noteModifierLike"/>
             <rng:ref name="model.scoreDefLike"/>
             <rng:ref name="model.staffDefLike"/>
             <rng:ref name="model.staffGrpLike"/>
-            <rng:ref name="model.annotLike"/>
-            <rng:ref name="model.graphicPrimitiveLike"/>
-            <rng:ref name="model.editLike"/>
-            <rng:ref name="model.transcriptionLike"/>
             <rng:ref name="model.syllablePart"/>
+            <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
       </content>
@@ -22183,17 +22578,12 @@
     <elementSpec ident="symbol" module="MEI.shared">
       <desc>A reference to a previously defined symbol.</desc>
       <classes>
-        <memberOf key="att.altSym"/>
-        <memberOf key="att.color"/>
         <memberOf key="att.common"/>
-        <memberOf key="att.common.anl"/>
-        <memberOf key="att.extSym"/>
         <memberOf key="att.facsimile"/>
-        <memberOf key="att.scalable"/>
-        <memberOf key="att.startId"/>
-        <memberOf key="att.typography"/>
-        <memberOf key="att.visualOffset"/>
-        <memberOf key="att.xy"/>
+        <memberOf key="att.symbol.anl"/>
+        <memberOf key="att.symbol.ges"/>
+        <memberOf key="att.symbol.log"/>
+        <memberOf key="att.symbol.vis"/>
         <memberOf key="model.textPhraseLike.limited"/>
       </classes>
       <content>
@@ -22244,7 +22634,6 @@
           <rng:zeroOrMore>
             <rng:choice>
               <rng:ref name="model.graphicPrimitiveLike"/>
-              <!-- With symbol no longer in model.graphicPrimitiveLike, it must be added. -->
               <rng:ref name="mei_symbol"/>
               <rng:ref name="graphic"/>
             </rng:choice>
@@ -22304,12 +22693,7 @@
         <memberOf key="att.lang"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
     </elementSpec>
     <elementSpec ident="table" module="MEI.figtable">
@@ -22345,6 +22729,9 @@
         <memberOf key="att.common"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:optional>
           <rng:ref name="desc"/>
         </rng:optional>
@@ -22419,6 +22806,9 @@
         <memberOf key="att.common"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:optional>
           <rng:ref name="model.biblLike"/>
         </rng:optional>
@@ -22541,11 +22931,11 @@
         <p>The <gi scheme="MEI">term</gi> element may include other <gi scheme="MEI">term</gi>
           elements in order to allow the creation of coordinated terms; i.e., terms created from a
           combination of other, independent terms.</p>
-        <p>A term may point to a taxonomy class defined in the MEI metadata header using only the
-            <att>class</att> attribute by using a URI corresponding to the internally-defined
-          category, while a class in an external taxonomy may be referenced using <att>class</att>
-          (absolute URL) or the combination of <att>xml:base</att> (base URL) plus <att>class</att>
-          (fragment identifier).</p>
+        <p>To associate a term with a taxonomy category defined in the MEI metadata header, the
+          value of <att>class</att> must contain a fragment identifier corresponding to the
+          appropriate <gi scheme="MEI">term</gi> element. To associate a term with category in an
+          externally-defined taxonomy, <att>class</att> must contain an absolute URI, which may
+          include the fragment identifier of the element containing the category label.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -22787,7 +23177,7 @@
           and any parallel titles, may be enclosed within a single <gi scheme="MEI">title</gi>
           element. Title parts may be encoded in <gi scheme="MEI">title</gi> sub-elements. The name
           of the list from which a controlled value is taken may be recorded using the
-            <att>auth</att> attribute. The number of initial characters (such as those constituing
+            <att>auth</att> attribute. The number of initial characters (such as those constituting
           an article or preposition) that should not be used for sorting a title or name may be
           indicated in the <att>nonfiling</att> attribute.</p>
       </remarks>
@@ -22806,6 +23196,9 @@
         <memberOf key="model.frontPart"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:choice>
             <rng:ref name="model.figureLike"/>
@@ -22859,7 +23252,7 @@
             <rng:data type="NMTOKENS"/>
           </datatype>
           <valList type="semi">
-            <valItem ident="main">
+            <!--<valItem ident="main">
               <desc>Main title.</desc>
             </valItem>
             <valItem ident="subordinate">
@@ -22870,6 +23263,37 @@
             </valItem>
             <valItem ident="desc">
               <desc>Descriptive paraphrase of the work.</desc>
+            </valItem>-->
+            <valItem ident="arr">
+              <desc>Arranged statement for music. Analogous to MARC 240 subfield o.</desc>
+            </valItem>
+            <valItem ident="carrier">
+              <desc>Medium of the carrier. Analogous to MARC 240 subfield h.</desc>
+            </valItem>
+            <valItem ident="date">
+              <desc>Publication/creation date(s) of work. Analogous to MARC 240 subfield f.</desc>
+            </valItem>
+            <valItem ident="form">
+              <desc>Form subheading. Analogous to MARC 240 subfield k.</desc>
+            </valItem>
+            <valItem ident="key">
+              <desc>Key for music. Analogous to MARC 240 subfield r.</desc>
+            </valItem>
+            <valItem ident="lang">
+              <desc>Language of a work. Analogous to MARC 240 subfield l (el).</desc>
+            </valItem>
+            <valItem ident="name">
+              <desc>Name of a part or section of a work. Analogous to MARC 240 subfield p.</desc>
+            </valItem>
+            <valItem ident="num">
+              <desc>Standard number designation of a work or of a part or section of a work.
+                Analogous to MARC 240 subfield n.</desc>
+            </valItem>
+            <valItem ident="perf">
+              <desc>Performance medium. Analogous to MARC 240 subfield m.</desc>
+            </valItem>
+            <valItem ident="ver">
+              <desc>Version. Analogous to MARC 240 subfield s.</desc>
             </valItem>
           </valList>
         </attDef>
@@ -22886,6 +23310,9 @@
         <memberOf key="att.common"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:ref name="model.titleLike"/>
         </rng:oneOrMore>
@@ -22935,12 +23362,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <attList>
         <attDef ident="num" usage="opt">
@@ -22969,12 +23391,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <remarks>
         <p>Treatment history may also comprise details of the treatment process (e.g., chemical
@@ -22995,12 +23412,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <remarks>
         <p>This element is modelled on an element in the Encoded Archival Description (EAD)
@@ -23044,7 +23456,6 @@
     <elementSpec ident="trkName" module="MEI.midi">
       <desc>(track name) – MIDI track/sequence name.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.lang"/>
         <memberOf key="att.midi.event"/>
@@ -23081,7 +23492,8 @@
         <constraint>
           <sch:rule context="mei:tuplet[not(@copyof)]">
             <sch:assert
-              test="count(descendant::*[local-name()='note' or local-name()='rest' or               local-name()='chord']) &gt; 1"
+              test="count(descendant::*[local-name()='note' or local-name()='rest' or
+              local-name()='chord']) &gt; 1"
               >A tuplet without a copyof attribute must have at least 2 note, rest, or chord
               descendants.</sch:assert>
           </sch:rule>
@@ -23183,18 +23595,15 @@
         <rng:zeroOrMore>
           <rng:choice>
             <rng:text/>
-            <rng:ref name="model.controlEventLike"/>
-            <rng:ref name="model.controlEventLike.cmn"/>
+            <rng:ref name="model.divLike"/>
             <rng:ref name="model.editLike"/>
+            <rng:ref name="model.editTransPart"/>
             <rng:ref name="model.fLike"/>
             <rng:ref name="model.graphicPrimitiveLike"/>
             <rng:ref name="model.layerPart"/>
-            <rng:ref name="model.layerLike"/>
-            <rng:ref name="model.measureLike"/>
-            <rng:ref name="model.sectionLike"/>
-            <rng:ref name="model.staffLike"/>
-            <rng:ref name="model.textComponentLike"/>
-            <rng:ref name="model.textPhraseLike"/>
+            <rng:ref name="model.milestoneLike.music"/>
+            <rng:ref name="model.sectionPart"/>
+            <rng:ref name="model.staffGrpLike"/>
             <rng:ref name="model.transcriptionLike"/>
           </rng:choice>
         </rng:zeroOrMore>
@@ -23211,6 +23620,11 @@
           the word, phrase, or passage contained with the <gi scheme="MEI">unclear</gi> element. The
           value of <att>resp</att> must point to one or more identifiers declared in the document
           header.</p>
+        <p>In no case should <gi scheme="MEI">unclear</gi> contain elements that would not otherwise
+          be permitted to occur within the parent of its own <gi scheme="MEI">app</gi> ancestor. For
+          example, when used as a descendent of <gi scheme="MEI">verse</gi>, <gi scheme="MEI"
+            >unclear</gi> should only contain those elements allowed within <gi scheme="MEI"
+            >verse</gi>.</p>
       </remarks>
       <remarks>
         <p>This element is modelled on an element in the Text Encoding Initiative (TEI)
@@ -23242,12 +23656,7 @@
         <memberOf key="att.lang"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <remarks>
         <p>
@@ -23266,7 +23675,6 @@
     <elementSpec ident="vel" module="MEI.midi">
       <desc>(velocity) – MIDI Note-on/off velocity.</desc>
       <classes>
-        <memberOf key="att.common.anl"/>
         <memberOf key="att.common"/>
         <memberOf key="att.midi.event"/>
         <memberOf key="att.midiNumber"/>
@@ -23278,8 +23686,12 @@
         <attDef ident="form" usage="req">
           <desc>Indicates whether this is note-on or note-off velocity data.</desc>
           <valList type="closed">
-            <valItem ident="on"/>
-            <valItem ident="off"/>
+            <valItem ident="on">
+              <desc>Note-on velocity.</desc>
+            </valItem>
+            <valItem ident="off">
+              <desc>Note-off velocity.</desc>
+            </valItem>
           </valList>
         </attDef>
       </attList>
@@ -23333,7 +23745,8 @@
         <memberOf key="att.volta.vis"/>
         <memberOf key="att.volta.ges"/>
         <memberOf key="att.volta.anl"/>
-        <memberOf key="model.rdgPart.critapp"/>
+        <memberOf key="model.rdgPart.music"/>
+        <memberOf key="model.editTransPart.music"/>
       </classes>
       <content>
         <rng:zeroOrMore>
@@ -23365,12 +23778,7 @@
         <memberOf key="model.physDescPart"/>
       </classes>
       <content>
-        <rng:zeroOrMore>
-          <rng:choice>
-            <rng:text/>
-            <rng:ref name="model.textPhraseLike.limited"/>
-          </rng:choice>
-        </rng:zeroOrMore>
+        <rng:ref name="macro.struc-unstrucContent"/>
       </content>
       <remarks>
         <p>The <att>facs</att> attribute may be used to record the location of the watermark in a
@@ -23513,6 +23921,9 @@
       </classes>
       <content>
         <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
+        <rng:zeroOrMore>
           <rng:ref name="model.identifierLike"/>
         </rng:zeroOrMore>
         <rng:optional>
@@ -23583,6 +23994,9 @@
         <memberOf key="model.headerPart"/>
       </classes>
       <content>
+        <rng:zeroOrMore>
+          <rng:ref name="model.headLike"/>
+        </rng:zeroOrMore>
         <rng:oneOrMore>
           <rng:ref name="work"/>
         </rng:oneOrMore>
